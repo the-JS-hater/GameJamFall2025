@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include "algorithm"
 
-#include "render.h"
+#include "render.hpp"
 
 
 void render_scene(RenderTexture2D render_target) 

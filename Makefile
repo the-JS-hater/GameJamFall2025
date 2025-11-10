@@ -4,7 +4,7 @@ CC=g++
 CFLAGS=-Wall
 
 OBJECTS=$(patsubst %.cpp, %.o, $(wildcard *.cpp))
-HEADERS=$(wildcard *.h)
+HEADERS=$(wildcard *.hpp)
 
 %.o: %.cpp $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@ 
