@@ -5,8 +5,8 @@ App init_application()
 {
 	App app{};
 	Settings settings {};
-	settings.resolution = (Vector2){1920.0f, 1080.0f};
-	settings.scaling = Scaling::STRETCHED;
+	settings.resolution = (Vector2){640.0f, 480.0f};
+	settings.scaling = Scaling::BLACK_BARS;
 	app.settings = settings;
 	auto [res_w, res_h] = settings.resolution;
 	app.render_target = LoadRenderTexture(res_w, res_h);
@@ -16,7 +16,8 @@ App init_application()
 };
 
 
-World init_world() {
+World init_world() 
+{
 	unsigned int const size = 1000;
 	World world;
 	world.x = 0;
