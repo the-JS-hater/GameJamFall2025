@@ -22,7 +22,7 @@ enum struct Scaling {
 }; 
 
 struct Settings {
-	Vector2 resolution;
+	Vector2 render_resolution;
 	Scaling scaling;
 };
 
@@ -37,6 +37,7 @@ struct App {
 	AppState state;
 	RenderTexture2D render_target;
 	Settings settings;
+	Vector2 logical_resolution;
   // NOTE: add additional application-level global data
 };
 

@@ -5,11 +5,13 @@ App init_application()
 {
 	App app{};
 	Settings settings {};
-	settings.resolution = (Vector2){640.0f, 480.0f};
-	settings.scaling = Scaling::BLACK_BARS;
+	settings.render_resolution = (Vector2){1080.0f, 720.0f};
+	settings.scaling = Scaling::STRETCHED;
 	app.settings = settings;
-	auto [res_w, res_h] = settings.resolution;
+	
+	auto [res_w, res_h] = settings.render_resolution;
 	app.render_target = LoadRenderTexture(res_w, res_h);
+	app.logical_resolution =  (Vector2){1920.0f, 1080.0f};
 	app.state = AppState::GAMELOOP;
 	
 	return app;

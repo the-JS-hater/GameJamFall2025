@@ -1,17 +1,27 @@
 #include "raylib.h"
+#include "math.h"
 #include "algorithm"
 
 #include "render.hpp"
 #include "app.hpp"
 
 
-void render_scene(RenderTexture2D& render_target) 
+void render_scene(App& app) 
 {
-	BeginTextureMode(render_target);
+	BeginTextureMode(app.render_target);
 	ClearBackground(WHITE);
 	
-	//NOTE: put actual graphics logic here
-	DrawRectangle(10, 10, 200, 200, RED);
+  float render_scale_x = app.settings.render_resolution.x / app.logical_resolution.x;
+  float render_scale_y = app.settings.render_resolution.y / app.logical_resolution.y;
+
+  Camera2D cam = {0};
+  cam.zoom = render_scale_x; 
+
+  BeginMode2D(cam);
+
+  DrawRectangle(10, 10, 200, 200, RED);
+
+  EndMode2D();
 	
 	EndTextureMode();
 }
@@ -22,7 +32,6 @@ void render_pause_menu(RenderTexture2D& render_target)
 	BeginTextureMode(render_target);
 	ClearBackground(WHITE);
   	
-	// NOTE: text does not scale well with low resolution
 	char const *pause_text = "GAME IS PAUSED";
   Font GetFontDefault(void);
 	int const font_size = 60; 
@@ -50,35 +59,42 @@ void render_to_screen(App& app)
 	BeginDrawing();
 	ClearBackground(BLACK);
 	
-	auto [res_w, res_h] = app.settings.resolution;
+	auto [res_w, res_h] = app.settings.render_resolution;
   float scaled_w;
 	float scaled_h;
 		
 	switch (app.settings.scaling) {
 		case Scaling::BLACK_BARS: {
 			float scale = std::min(
-				(float)GetScreenWidth() / res_w,
-  		  (float)GetScreenHeight() / res_h
+    		(float)GetScreenWidth() / res_w,
+    		(float)GetScreenHeight() / res_h 
 			);
-  		scaled_w = res_w * scale;
-  		scaled_h = res_h * scale;
+			scaled_w = roundf(res_w * scale);
+			scaled_h = roundf(res_h * scale);
 			break;
 		}
 		case Scaling::STRETCHED: {
-  		scaled_w = res_w * (float)GetScreenWidth() / res_w;
-  		scaled_h = res_h * (float)GetScreenHeight() / res_h;
+  		scaled_w = (float)GetScreenWidth(); 
+  		scaled_h = (float)GetScreenHeight();
 			break;
 		}
 		default: {
 			TraceLog(LOG_ERROR, "No scaling set in settings");
 		}
 	}
-	float offset_x = (GetScreenWidth() - scaled_w) / 2.0f;
-  float offset_y = (GetScreenHeight() - scaled_h) / 2.0f;
+	float offset_x = roundf((GetScreenWidth()  - scaled_w) / 2.0f);
+	float offset_y = roundf((GetScreenHeight() - scaled_h) / 2.0f);
   Rectangle src = { 0, 0, res_w, -res_h };
   Rectangle dst = {offset_x, offset_y, scaled_w, scaled_h};
 
   DrawTexturePro(app.render_target.texture, src, dst, {0, 0}, 0.0f, WHITE);
 	
+	// TODO: temp
+	{
+		char const *scaling = app.settings.scaling == Scaling::STRETCHED ? "STRETCHED" : "BLACK BARS";
+		char const *resolution_printout = TextFormat("Resolution %d x %d, %s", (int)res_w, (int)res_h, scaling);
+		DrawText(resolution_printout, 10, 10, 20, LIME);
+	}
+
 	EndDrawing();
 }

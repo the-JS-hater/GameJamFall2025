@@ -5,6 +5,6 @@
 
 #include "app.hpp"
 
-void render_scene(RenderTexture2D&); 
+void render_scene(App&); 
 void render_pause_menu(RenderTexture2D&);
 void render_to_screen(App&);
