@@ -1,10 +1,38 @@
 #include "raylib.h"
+#include <vector>
+
 #include "render.h"
+
+
+struct Entity {
+	float x,y,dx,dy;
+	Color color;
+};
+
+
+struct World {
+	float x,y,w,h;
+	std::vector<Entity> entities;
+	// NOTE: add additional game-level global data
+};
+
+
+enum struct AppState {
+	PLAYING,
+	PAUSED,
+};
+
+
+struct App {
+	World world;
+	AppState state;
+  // NOTE: add additional application-level global data
+};
 
 
 int main() 
 {	
-	// === SETUP ===
+	// === INIT ===
 	SetTraceLogLevel(LOG_ERROR);
 
 	unsigned int const win_w = 640u;
@@ -27,16 +55,8 @@ int main()
 		// === RENDER ===
 		
 		ClearBackground(BLACK);
-		
-		// render to texture (frame buffer)
-		BeginTextureMode(render_target);
-		DrawRectangle(10, 10, 200, 200, RED);
-		EndTextureMode();
-		
-		// render to screen
-		BeginDrawing();
+		render_scene(render_target);
 		render_to_screen(render_target, res_w, res_h);
-		EndDrawing();
 	}
 	CloseWindow();
 }

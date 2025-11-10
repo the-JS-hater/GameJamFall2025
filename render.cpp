@@ -3,8 +3,21 @@
 
 #include "render.h"
 
+
+void render_scene(RenderTexture2D render_target) 
+{
+	BeginTextureMode(render_target);
+	
+	//NOTE: put actual graphics logic here
+	DrawRectangle(10, 10, 200, 200, RED);
+	
+	EndTextureMode();
+}
+
+
 void render_to_screen(RenderTexture2D render_target, int const res_w, int const res_h)
 {
+	BeginDrawing();
   float scale = std::min(
 		(float)GetScreenWidth() / res_w,
     (float)GetScreenHeight() / res_h
@@ -20,4 +33,5 @@ void render_to_screen(RenderTexture2D render_target, int const res_w, int const 
 	};
   Rectangle dst = {offset_x, offset_y, scaled_w, scaled_h};
   DrawTexturePro(render_target.texture, src, dst, {0, 0}, 0.0f, WHITE);
+	EndDrawing();
 }
