@@ -3,31 +3,6 @@
 #include "running.hpp"
 
 
-enum struct AppState {
-	GAMELOOP,
-	PAUSED,
-};
-
-struct App {
-	World world;
-	AppState state;
-	RenderTexture2D render_target;
-  // NOTE: add additional application-level global data
-};
-
-
-App init_application()
-{
-	unsigned int const res_w = 1920u;
-	unsigned int const res_h = 1080u;
-	App app{};
-	app.render_target = LoadRenderTexture(res_w, res_h);
-	app.state = AppState::GAMELOOP;
-	
-	return app;
-};
-
-
 int main() 
 {	
 	SetTraceLogLevel(LOG_ERROR);
@@ -42,14 +17,18 @@ int main()
 	{
 		switch (app.state) {
 			case AppState::GAMELOOP: {
-				run_gameloop(app.world, app.render_target);
+				run_gameloop(app);
 				break;
 			}
 			case AppState::PAUSED: {
-				// TODO: pause screen
+				run_pausemenu(app);
 				break;
+			}
+			case AppState::EXIT: {
+				goto exit_app;
 			}
 		}
 	}
+	exit_app:
 	CloseWindow();
 }
