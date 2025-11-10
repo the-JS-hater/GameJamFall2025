@@ -16,6 +16,16 @@ struct World {
 	// NOTE: add additional game-level global data
 };
 
+enum struct Scaling {
+	BLACK_BARS,
+	STRETCHED
+}; 
+
+struct Settings {
+	Vector2 resolution;
+	Scaling scaling;
+};
+
 enum struct AppState {
 	GAMELOOP,
 	PAUSED,
@@ -25,10 +35,11 @@ enum struct AppState {
 struct App {
 	World world;
 	AppState state;
-	unsigned int res_w, res_h;
 	RenderTexture2D render_target;
+	Settings settings;
   // NOTE: add additional application-level global data
 };
 
 
 App init_application(void);
+World init_world(void); 

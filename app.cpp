@@ -1,12 +1,29 @@
 #include "app.hpp"
 
+
 App init_application()
 {
 	App app{};
-	app.res_w = 1920u;
-	app.res_h = 1080u;
-	app.render_target = LoadRenderTexture(app.res_w, app.res_h);
+	Settings settings {};
+	settings.resolution = (Vector2){1920.0f, 1080.0f};
+	settings.scaling = Scaling::STRETCHED;
+	app.settings = settings;
+	auto [res_w, res_h] = settings.resolution;
+	app.render_target = LoadRenderTexture(res_w, res_h);
 	app.state = AppState::GAMELOOP;
 	
 	return app;
 };
+
+
+World init_world() {
+	unsigned int const size = 1000;
+	World world;
+	world.x = 0;
+	world.y = 0;
+	world.w = size;
+	world.h = size;
+	world.entities = std::vector<Entity>();
+
+	return world;
+}

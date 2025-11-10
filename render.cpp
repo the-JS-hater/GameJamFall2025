@@ -8,7 +8,7 @@
 void render_scene(RenderTexture2D& render_target) 
 {
 	BeginTextureMode(render_target);
-	ClearBackground(BLACK);
+	ClearBackground(WHITE);
 	
 	//NOTE: put actual graphics logic here
 	DrawRectangle(10, 10, 200, 200, RED);
@@ -20,8 +20,9 @@ void render_scene(RenderTexture2D& render_target)
 void render_pause_menu(RenderTexture2D& render_target)
 {
 	BeginTextureMode(render_target);
-	ClearBackground(BLACK);
-  
+	ClearBackground(WHITE);
+  	
+	// NOTE: text does not scale well with low resolution
 	char const *pause_text = "GAME IS PAUSED";
   Font GetFontDefault(void);
 	int const font_size = 60; 
@@ -40,7 +41,6 @@ void render_pause_menu(RenderTexture2D& render_target)
 		font_size,
     RED
 	);
-
 	EndTextureMode();
 }
 
@@ -49,21 +49,35 @@ void render_to_screen(App& app)
 {
 	BeginDrawing();
 	ClearBackground(BLACK);
-  
-	float scale = std::min(
-		(float)GetScreenWidth() / app.res_w,
-    (float)GetScreenHeight() / app.res_h
-	);
-  float scaled_w = app.res_w * scale;
-  float scaled_h = app.res_h * scale;
-  float offset_x = (GetScreenWidth() - scaled_w) / 2;
-  float offset_y = (GetScreenHeight() - scaled_h) / 2;
-  Rectangle src = {
-		0, 0, 
-		(float)app.res_w,
-    -(float)app.res_h
-	};
+	
+	auto [res_w, res_h] = app.settings.resolution;
+  float scaled_w;
+	float scaled_h;
+		
+	switch (app.settings.scaling) {
+		case Scaling::BLACK_BARS: {
+			float scale = std::min(
+				(float)GetScreenWidth() / res_w,
+  		  (float)GetScreenHeight() / res_h
+			);
+  		scaled_w = res_w * scale;
+  		scaled_h = res_h * scale;
+			break;
+		}
+		case Scaling::STRETCHED: {
+  		scaled_w = res_w * (float)GetScreenWidth() / res_w;
+  		scaled_h = res_h * (float)GetScreenHeight() / res_h;
+			break;
+		}
+		default: {
+			TraceLog(LOG_ERROR, "No scaling set in settings");
+		}
+	}
+	float offset_x = (GetScreenWidth() - scaled_w) / 2.0f;
+  float offset_y = (GetScreenHeight() - scaled_h) / 2.0f;
+  Rectangle src = { 0, 0, res_w, -res_h };
   Rectangle dst = {offset_x, offset_y, scaled_w, scaled_h};
+
   DrawTexturePro(app.render_target.texture, src, dst, {0, 0}, 0.0f, WHITE);
 	
 	EndDrawing();

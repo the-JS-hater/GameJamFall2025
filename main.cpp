@@ -7,11 +7,12 @@ int main()
 {	
 	SetTraceLogLevel(LOG_ERROR);
 
-	unsigned int const win_w = 640u;
-	unsigned int const win_h = 480u;
-	InitWindow(win_w, win_h, "Title");
+	unsigned int const initial_win_w = 640u;
+	unsigned int const initial_win_h = 480u;
+	InitWindow(initial_win_w, initial_win_h, "Title");
 	
 	App app = init_application();
+	app.world = init_world();
 	
 	while (!WindowShouldClose())
 	{
