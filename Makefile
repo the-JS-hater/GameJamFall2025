@@ -1,7 +1,7 @@
 TARGET=game.exe
 LIBS=-lraylib
 CC=g++
-CFLAGS=-Wall
+CFLAGS=-Wall -Wextra -Wfloat-conversion
 
 OBJECTS=$(patsubst %.cpp, %.o, $(wildcard *.cpp))
 HEADERS=$(wildcard *.hpp)

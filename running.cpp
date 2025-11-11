@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include "math.h"
 
 #include "running.hpp"
 #include "render.hpp"
@@ -35,7 +36,7 @@ void run_gameloop(App& app)
 			app.settings.render_resolution = resolutions[test_idx];
 			UnloadRenderTexture(app.render_target);
 			auto [res_w, res_h] = resolutions[test_idx];
-			app.render_target = LoadRenderTexture(res_w, res_h);
+			app.render_target = LoadRenderTexture((int)round(res_w), (int)round(res_h));
 			test_idx++;
 			test_idx %= 4;
 		}

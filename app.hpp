@@ -38,6 +38,7 @@ struct App {
 	RenderTexture2D render_target;
 	Settings settings;
 	Vector2 logical_resolution;
+	Camera2D camera;
   // NOTE: add additional application-level global data
 };
 
