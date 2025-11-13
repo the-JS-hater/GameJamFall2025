@@ -19,7 +19,7 @@ void render_scene(App& app)
   BeginMode2D(app.camera);
 	
   DrawRectangleRec(
-		(Rectangle){
+		Rectangle{
 			10.0f * render_scale_x, 
 			10.0f * render_scale_y, 
 			20.0f * render_scale_x, 

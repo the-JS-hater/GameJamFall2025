@@ -7,16 +7,16 @@ App init_application()
 {
 	App app{};
 	Settings settings {};
-	settings.render_resolution = (Vector2){1920.0f, 1080.0f};
+	settings.render_resolution = Vector2{1920.0f, 1080.0f};
 	settings.scaling = Scaling::STRETCHED;
 	app.settings = settings;
 	
 	auto [res_w, res_h] = settings.render_resolution;
 	app.render_target = LoadRenderTexture((int)round(res_w), (int)(res_h));
-	app.logical_resolution = (Vector2){1920.0f, 1080.0f};
+	app.logical_resolution = Vector2{1920.0f, 1080.0f};
 	app.state = AppState::GAMELOOP;
 	
-	app.camera = (Camera2D) {
+	app.camera = Camera2D {
 		{ res_w / 2.0f, res_h / 2.0f }, // Offset
 		{ // Camera target (rotation and zoom origin)
 			app.logical_resolution.x / 2.0f,
