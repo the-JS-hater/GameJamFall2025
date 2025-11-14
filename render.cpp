@@ -5,6 +5,7 @@
 #include "render.hpp"
 #include "app.hpp"
 
+#include "stdio.h"
 
 void render_scene(App& app) 
 {
@@ -94,6 +95,11 @@ void render_to_screen(App& app)
   Rectangle src = { 0.0f, 0.0f, res_w, -res_h };
   Rectangle dst = { offset_x, offset_y, scaled_w, scaled_h };
   
+  printf(
+    "scaled_w: %f\nscaled_h: %f\nwindow_w: %d\nwindow_h: %d\nres_w: %f\nres_h: %f\n\n",
+    scaled_w, scaled_h, GetScreenWidth(), GetScreenHeight(), res_w, res_h
+  );
+
   DrawTexturePro(app.render_target.texture, src, dst, {0, 0}, 0.0f, WHITE);
   
   // TODO: temp
@@ -107,4 +113,14 @@ void render_to_screen(App& app)
     DrawText(resolution_printout, 10, 10, 20, LIME);
   }
   EndDrawing();
+}
+
+
+void set_display_resolution(Vector2 resolution, App& app)
+{
+  app.settings.render_resolution = resolution;
+  UnloadRenderTexture(app.render_target);
+  auto [res_w, res_h] = resolution;
+  app.render_target = 
+    LoadRenderTexture((int)round(res_w), (int)round(res_h));
 }

@@ -16,3 +16,4 @@ void run_pausemenu(App&);
 // NOTE:(raylib.h) Use GetKeyPressed() to allow redefining
 void setup_controls(KeyboardKey*); 
 bool is_actionkey_pressed(Actions, KeyboardKey*);
+bool is_actionkey_down(Actions, KeyboardKey*); 
