@@ -110,11 +110,12 @@ void render_to_screen(App& app)
     
     char const *resolution_printout = 
       TextFormat(
-        "Resolution %d x %d, %s\nFPS: %d", 
+        "Resolution %d x %d, %s\nFPS: %d\nWater: %d", 
         (int)res_w, 
         (int)res_h, 
         scaling, 
-        GetFPS()
+        GetFPS(),
+        app.world.waterAmount
       );
     DrawText(resolution_printout, 10, 10, 20, LIME);
   }

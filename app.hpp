@@ -22,6 +22,7 @@ struct Entity {
 struct World {
   float x,y,w,h;
   std::vector<Entity> entities;
+  float waterAmount = 0.0f;
   // NOTE: add additional game-level global data
 };
 
