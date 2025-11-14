@@ -1,12 +1,13 @@
 #include "raylib.h"
 #include "math.h"
-#include "algorithm"
+#include <algorithm>
+#include <set>
 
 #include "render.hpp"
 #include "app.hpp"
 
 
-void render_scene(App& app) 
+void render_scene(App& app, std::set<unsigned int> const& selected_turtles) 
 {
   BeginTextureMode(app.render_target);
   ClearBackground(WHITE);
@@ -31,21 +32,22 @@ void render_scene(App& app)
     
   for (Entity ent : app.world.entities) 
   {
-    auto [_id,x,y,_dx,_dy,size,state, target, color] = ent;
     DrawRectangleRec(
       Rectangle{
-        x * render_scale_x, 
-        y * render_scale_y, 
-        size * render_scale_x, 
-        size * render_scale_y
-      }, 
-      color
+        ent.x * render_scale_x, 
+        ent.y * render_scale_y, 
+        ent.w * render_scale_x, 
+        ent.h * render_scale_y
+      },
+      selected_turtles.find(ent.id) == selected_turtles.end() ?
+      ent.color : RED
     );
   }
 
   EndMode2D();
   EndTextureMode();
 }
+
 
 void render_pause_menu(RenderTexture2D& render_target)
 {
@@ -74,7 +76,7 @@ void render_pause_menu(RenderTexture2D& render_target)
 }
   
   
-void render_to_screen(App& app)
+void render_to_screen(App& app, Rectangle selection)
 {
   BeginDrawing();
   ClearBackground(BLACK);
@@ -129,6 +131,18 @@ void render_to_screen(App& app)
       );
     DrawText(resolution_printout, 10, 10, 20, LIME);
   }
+
+  float const line_thicc = 5.0f;
+  if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) 
+  {
+    DrawRectangleLinesEx(
+      selection, 
+      line_thicc, 
+      RED
+    );
+  }
+
+
   EndDrawing();
 }
 

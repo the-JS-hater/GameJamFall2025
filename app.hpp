@@ -13,7 +13,7 @@ enum struct TurtleState {
 
 struct Entity {
   unsigned int id;
-  float x,y,dx,dy,size;
+  float x,y,dx,dy,w,h;
   TurtleState state;
   Vector2 target;
   Color color;

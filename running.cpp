@@ -1,11 +1,12 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "math.h"
+#include <algorithm>
+#include <set>
 
 #include "running.hpp"
 #include "render.hpp"
 #include "app.hpp"
-#include "vectorMath.hpp"
 
 
 void run_gameloop(App& app)
@@ -65,20 +66,74 @@ void run_gameloop(App& app)
       }
     }
 
+    static float initial_x = 0.0f; 
+    static float initial_y  = 0.0f;
+    static float final_x = 0.0f;
+    static float final_y = 0.0f;
+
+    std::set<unsigned int> selected_turtles;
+    bool make_selection = false;
+    {
+      if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        auto [x, y] = GetMousePosition();
+        initial_x = x;
+        initial_y = y;
+      }
+      if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+        auto [x, y] = GetMousePosition();
+        final_x = x;
+        final_y = y;
+        make_selection = true;
+      }
+    }
+
     // === UPDATE ===
-    
+
     for (Entity& ent : app.world.entities) 
     {
-      if (ent.state == TurtleState::PATHING) {
+      Vector2 transformed_min = 
+        GetScreenToWorld2D(
+          Vector2 {
+              std::min(final_x, initial_x),
+              std::min(final_y, initial_y),
+          },
+          app.camera
+        );
+      Vector2 transformed_max = 
+        GetScreenToWorld2D(
+          Vector2 {
+            fabs(final_x - initial_x),
+            fabs(final_y - initial_y)
+          },
+          app.camera
+        );
+      Rectangle transformed = {
+        transformed_min.x,
+        transformed_min.y,
+        transformed_max.x,
+        transformed_max.y,
+      };
+      if (
+        make_selection and
+        CheckCollisionRecs(
+          transformed,
+          Rectangle { ent.x, ent.y, ent.w, ent.h }
+        )
+      ) {
+        selected_turtles.insert(ent.id);
+      }
+
+      if (ent.state == TurtleState::PATHING) 
+      {
         Vector2 pos = Vector2{ent.x, ent.y};
-        Vector2 direction = subtract(ent.target, pos);
-        direction = normalize(direction);
+        Vector2 direction = Vector2Subtract(ent.target, pos);
+        direction = Vector2Normalize(direction);
         const float SPEED = 20;
         ent.dx = SPEED * dt * direction.x;
         ent.dy = SPEED * dt * direction.y;
         ent.x += ent.dx;
         ent.y += ent.dy;
-        if (distanceBetween(pos, ent.target) < 1) {
+        if (Vector2Distance(pos, ent.target) < 1) {
           ent.state = TurtleState::IDLE;
         }
       }
@@ -90,8 +145,15 @@ void run_gameloop(App& app)
     app.camera.target.x = Lerp(app.camera.target.x, target_pos.x, lerp_amount);
     app.camera.target.y = Lerp(app.camera.target.y, target_pos.y, lerp_amount);
     
-    render_scene(app);
-    render_to_screen(app);
+    render_scene(app, selected_turtles);
+    render_to_screen(app, 
+      Rectangle {
+        std::min((float)GetMouseX(), initial_x),
+        std::min((float)GetMouseY(), initial_y),
+        fabs((float)GetMouseX() - initial_x),
+        fabs((float)GetMouseY() - initial_y)
+      }
+    );
   }
 }
 
@@ -113,7 +175,7 @@ void run_pausemenu(App& app)
     // === RENDERING ===
     
     render_pause_menu(app.render_target);
-    render_to_screen(app);
+    render_to_screen(app, {0,0,0,0});
   }
 }
 
