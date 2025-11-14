@@ -4,10 +4,10 @@
 #include "app.hpp"
 
 enum struct Actions {
-	MOVE_LEFT 		= 0,
-	MOVE_RIGHT 		= 1,
-	MOVE_UP 			= 2,
-	MOVE_DOWN 		= 3,
+  MOVE_LEFT   = 0,
+  MOVE_RIGHT  = 1,
+  MOVE_UP     = 2,
+  MOVE_DOWN   = 3,
 };
 
 // Run a single gameloop cycle
