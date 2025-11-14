@@ -21,7 +21,7 @@ void render_scene(App& app)
     
   for (Entity ent : app.world.entities) 
   {
-    auto [_id,x,y,_dx,_dy,size,color] = ent;
+    auto [_id,x,y,_dx,_dy,size,state, target, color] = ent;
     DrawRectangleRec(
       Rectangle{
         x * render_scale_x, 

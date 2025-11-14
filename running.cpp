@@ -5,6 +5,7 @@
 #include "running.hpp"
 #include "render.hpp"
 #include "app.hpp"
+#include "vectorMath.hpp"
 
 
 void run_gameloop(App& app)
@@ -68,7 +69,19 @@ void run_gameloop(App& app)
     
     for (Entity& ent : app.world.entities) 
     {
-      
+      if (ent.state == TurtleState::PATHING) {
+        Vector2 pos = Vector2{ent.x, ent.y};
+        Vector2 direction = subtract(ent.target, pos);
+        direction = normalize(direction);
+        const float SPEED = 20;
+        ent.dx = SPEED * dt * direction.x;
+        ent.dy = SPEED * dt * direction.y;
+        ent.x += ent.dx;
+        ent.y += ent.dy;
+        if (distanceBetween(pos, ent.target) < 1) {
+          ent.state = TurtleState::IDLE;
+        }
+      }
     }
 
     // === RENDER ===

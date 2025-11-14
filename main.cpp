@@ -29,6 +29,8 @@ int main()
           (float)GetRandomValue(0.0, max_vel),
           (float)GetRandomValue(0.0, max_vel),
           (float)GetRandomValue(min_size, max_size),
+          TurtleState::PATHING,
+          Vector2{(float)GetRandomValue(0, GetScreenWidth()), (float)GetRandomValue(0, GetScreenHeight())},
           Color {
             (unsigned char)GetRandomValue(0, 255),
             (unsigned char)GetRandomValue(0, 255),
