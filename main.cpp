@@ -16,7 +16,7 @@ int main()
   setup_controls(app.input_map);
   
   while (!WindowShouldClose())
-  {
+  { 
     switch (app.state) {
       case AppState::GAMELOOP: 
       {
