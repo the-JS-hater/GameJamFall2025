@@ -4,9 +4,10 @@
 #include "raylib.h"
 #include <vector>
 
-
+// TODO:(morgan) move entities and world into more appropriate header
 struct Entity {
-  float x,y,dx,dy;
+  unsigned int id;
+  float x,y,dx,dy,size;
   Color color;
 };
 
@@ -40,7 +41,7 @@ struct App {
   Vector2 logical_resolution;
   Camera2D camera;
   // array_size should match nr. of enums in Actions, see running.hpp
-  KeyboardKey input_map[4]; 
+  KeyboardKey input_map[6]; 
 
   // NOTE: add additional application-level global data
 };

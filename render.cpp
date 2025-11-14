@@ -18,15 +18,21 @@ void render_scene(App& app)
 
   BeginMode2D(app.camera);
 
-  DrawRectangleRec(
-    Rectangle{
-      10.0f * render_scale_x, 
-      10.0f * render_scale_y, 
-      20.0f * render_scale_x, 
-      40.0f * render_scale_y
-    }, 
-    RED
-  );
+    
+  for (Entity ent : app.world.entities) 
+  {
+    auto [_id,x,y,_dx,_dy,size,color] = ent;
+    DrawRectangleRec(
+      Rectangle{
+        x * render_scale_x, 
+        y * render_scale_y, 
+        size * render_scale_x, 
+        size * render_scale_y
+      }, 
+      color
+    );
+  }
+
   EndMode2D();
   EndTextureMode();
 }
@@ -102,8 +108,14 @@ void render_to_screen(App& app)
         app.settings.scaling == Scaling::STRETCHED ? 
         "STRETCHED" : "BLACK BARS";
     
-    char const *resolution_printout = TextFormat("Resolution %d x %d, %s", (int)res_w, (int)res_h, scaling);
-    
+    char const *resolution_printout = 
+      TextFormat(
+        "Resolution %d x %d, %s\nFPS: %d", 
+        (int)res_w, 
+        (int)res_h, 
+        scaling, 
+        GetFPS()
+      );
     DrawText(resolution_printout, 10, 10, 20, LIME);
   }
   EndDrawing();

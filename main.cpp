@@ -13,6 +13,32 @@ int main()
   
   App app = init_application();
   app.world = init_world();
+  { //NOTE: TEMP
+    int const test_entities_count = 100;
+    for (unsigned int id = 0; id < test_entities_count; ++id)
+    {
+      float const max_vel = 100.0f;
+      float const min_size = 10.0f;
+      float const max_size = 50.0f;
+      app.world.entities.push_back(
+        Entity {
+          id,
+          (float)GetRandomValue(0.0, (int)app.world.w),
+          (float)GetRandomValue(0.0, (int)app.world.h),
+          
+          (float)GetRandomValue(0.0, max_vel),
+          (float)GetRandomValue(0.0, max_vel),
+          (float)GetRandomValue(min_size, max_size),
+          Color {
+            (unsigned char)GetRandomValue(0, 255),
+            (unsigned char)GetRandomValue(0, 255),
+            (unsigned char)GetRandomValue(0, 255),
+            255
+          }
+        }
+      );
+    }
+  }
   setup_controls(app.input_map);
   
   while (!WindowShouldClose())
