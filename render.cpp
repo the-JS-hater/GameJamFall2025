@@ -18,6 +18,16 @@ void render_scene(App& app)
 
   BeginMode2D(app.camera);
 
+  for (int y = 0; y < app.world.tiles.size(); ++y) {
+    for (int x = 0; x < app.world.tiles[y].size(); ++x) {
+      Color color = GREEN;
+      switch (app.world.tiles[y][x]) {
+      case TileType::RIVER:
+        color = BLUE;
+      }
+      DrawRectangle(x * app.world.tileSize, y * app.world.tileSize, app.world.tileSize, app.world.tileSize, color);
+    }
+  }
     
   for (Entity ent : app.world.entities) 
   {
