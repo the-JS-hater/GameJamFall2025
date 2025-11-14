@@ -13,6 +13,7 @@ int main()
 	
 	App app = init_application();
 	app.world = init_world();
+	setup_controls(app.input_map);
 	
 	while (!WindowShouldClose())
 	{
