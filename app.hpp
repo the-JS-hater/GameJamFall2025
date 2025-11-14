@@ -5,9 +5,17 @@
 #include <vector>
 
 // TODO:(morgan) move entities and world into more appropriate header
+
+enum struct TurtleState {
+  IDLE,
+  PATHING
+};
+
 struct Entity {
   unsigned int id;
   float x,y,dx,dy,size;
+  TurtleState state;
+  Vector2 target;
   Color color;
 };
 
