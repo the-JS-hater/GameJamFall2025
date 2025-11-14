@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include "raymath.h"
 #include "math.h"
 
 #include "running.hpp"
@@ -29,28 +30,38 @@ void run_gameloop(App& app)
       ToggleFullscreen();
     }
     
+    static Vector2 target_pos = {
+      (float)GetScreenWidth() / 2.0f, 
+      (float)GetScreenHeight() / 2.0f
+    };
+    
     { //NOTE: TEMP
+
       float const camera_speed = 300.0f;
       if (is_actionkey_down(Actions::MOVE_LEFT, app.input_map)) 
       {
-        app.camera.target.x -= dt * camera_speed;
+        target_pos.x -= dt * camera_speed;
       }
       if (is_actionkey_down(Actions::MOVE_RIGHT, app.input_map)) 
       {
-        app.camera.target.x += dt * camera_speed;
+        target_pos.x += dt * camera_speed;
       }
       if (is_actionkey_down(Actions::MOVE_UP, app.input_map)) 
       {
-        app.camera.target.y -= dt * camera_speed;
+        target_pos.y -= dt * camera_speed;
       }
       if (is_actionkey_down(Actions::MOVE_DOWN, app.input_map)) 
       {
-        app.camera.target.y += dt * camera_speed;
+        target_pos.y += dt * camera_speed;
       }
     }
 
     // === UPDATE ===
     
+    float const lerp_amount = 0.5f;
+    app.camera.target.x = Lerp(app.camera.target.x, target_pos.x, lerp_amount);
+    app.camera.target.y = Lerp(app.camera.target.y, target_pos.y, lerp_amount);
+
     // === RENDER ===
     
     render_scene(app);
