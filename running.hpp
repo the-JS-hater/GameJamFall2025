@@ -12,6 +12,7 @@ enum struct Actions {
 
 void run_gameloop(App&);
 void run_pausemenu(App&);
+void run_startmenu(App&);
 
 void process_turtle(Entity&, float const, App&); 
 

@@ -75,6 +75,7 @@ enum struct AppState {
   GAMELOOP,
   PAUSED,
   EXIT,
+  START,
 };
 
 struct App {

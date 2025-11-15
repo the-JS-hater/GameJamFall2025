@@ -18,6 +18,7 @@ Texture2D river_top_left_tex;
 Texture2D river_bottom_right_tex;
 Texture2D river_top_right_tex;
 Texture2D egg_tex;
+Texture2D start_screen_tex;
 
 
 void init_resources(App const& app) 
@@ -33,6 +34,7 @@ void init_resources(App const& app)
   river_bottom_right_tex  = LoadTexture("resources/River_Bottom_Right.png");
   river_top_right_tex     = LoadTexture("resources/River_Top_Right.png");
   egg_tex                 = LoadTexture("resources/Egg.png");
+  start_screen_tex        = LoadTexture("resources/Start_Screen.png");
   
   Image grass_image               = LoadImageFromTexture(grass_tex);
   Image turtle_image              = LoadImageFromTexture(turtle_tex);
@@ -45,6 +47,7 @@ void init_resources(App const& app)
   Image river_bottom_right_image  = LoadImageFromTexture(river_bottom_right_tex);
   Image river_top_right_image     = LoadImageFromTexture(river_top_right_tex);
   Image egg_image                 = LoadImageFromTexture(egg_tex);
+  Image start_screen_image        = LoadImageFromTexture(start_screen_tex);
 
   int size = app.world.tileSize;
   ImageResize(&grass_image, size, size);
@@ -63,6 +66,8 @@ void init_resources(App const& app)
   ImageResize(&turtle2_image, size, turtle_height);
   ImageResize(&turtle3_image, size, turtle_height);
 
+  ImageResize(&start_screen_image, 1920u, 1080u);
+
   grass_tex               = LoadTextureFromImage(grass_image);
   turtle_tex              = LoadTextureFromImage(turtle_image);
   turtle2_tex             = LoadTextureFromImage(turtle2_image); 
@@ -74,6 +79,7 @@ void init_resources(App const& app)
   river_bottom_right_tex  = LoadTextureFromImage(river_bottom_right_image);
   river_top_right_tex     = LoadTextureFromImage(river_top_right_image);
   egg_tex                 = LoadTextureFromImage(egg_image);
+  start_screen_tex        = LoadTextureFromImage(start_screen_image);
 }
 
 void render_scene(App& app, std::set<unsigned int> const& selected_turtles) 
@@ -116,7 +122,7 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
       }
       static float const magic_scale_constant = 1.02f;
       Vector2 vec_pos = { (float)x * app.world.tileSize, (float)y * app.world.tileSize };
-      DrawTextureEx(*tex, vec_pos, 1.0f /*rotation*/, magic_scale_constant, WHITE);  
+      DrawTextureEx(*tex, vec_pos, 0.0f /*rotation*/, magic_scale_constant, WHITE);  
     }
   }
    
@@ -124,20 +130,26 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
   {
     switch (ent.type)
     {
-    case EntityType::TURTLE:
-      Texture2D choosen_turtle_tex = 
-        ent.id % 3 ?
-        turtle_tex : ent.id % 7 ?
-          turtle2_tex : turtle3_tex;
+      case EntityType::TURTLE:
+      {
+        Texture2D choosen_turtle_tex = 
+          ent.id % 3 ?
+          turtle_tex : ent.id % 7 ?
+            turtle2_tex : turtle3_tex;
 
-      DrawTextureEx(choosen_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
-      break;
-    case EntityType::EGG:
-      DrawTextureEx(egg_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
-      break;
-    case EntityType::BATH:
-      DrawRectangle(ent.x, ent.y, 100, 100, BROWN);
-      break;
+        DrawTextureEx(choosen_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
+        break;
+      }
+      case EntityType::EGG:
+      {
+        DrawTextureEx(egg_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
+        break;
+      }
+      case EntityType::BATH:
+      {
+        DrawRectangle(ent.x, ent.y, 100, 100, BROWN);
+        break;
+      }
     }
   }
   EndMode2D();
@@ -164,6 +176,34 @@ void render_pause_menu(RenderTexture2D& render_target)
     pause_text, 
     render_target.texture.width / 2 - (int)(text_size.x / 2.0f), 
     render_target.texture.height / 2 - (int)(text_size.y / 2.0f), 
+    font_size,
+    RED
+  );
+  EndTextureMode();
+}
+
+void render_start_menu(RenderTexture2D& render_target)
+{
+  BeginTextureMode(render_target);
+  ClearBackground(WHITE);
+
+  DrawTextureEx(start_screen_tex, Vector2 {0.0f, 0.0f}, 0.0f, 1.0f, WHITE);
+
+  char const *start_text= "PRESS SPACE TO START";
+  Font GetFontDefault(void);
+  int const font_size = 50; 
+  int const spacing = 2;
+  Vector2 text_size = MeasureTextEx(
+    GetFontDefault(), 
+    start_text, 
+    font_size, 
+    spacing
+  );
+  // Draw centered text
+  DrawText(
+    start_text, 
+    render_target.texture.width / 2 - (int)(text_size.x / 2.0f), 
+    render_target.texture.height * 0.90 - (int)(text_size.y / 2.0f), 
     font_size,
     RED
   );

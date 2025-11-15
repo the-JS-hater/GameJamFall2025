@@ -96,6 +96,11 @@ int main()
         run_pausemenu(app);
         break;
       }
+      case AppState::START:
+      { 
+        run_startmenu(app);
+        break;
+      }
       case AppState::EXIT: 
       {
         goto exit_app;

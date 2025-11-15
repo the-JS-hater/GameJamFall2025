@@ -265,6 +265,28 @@ void run_pausemenu(App& app)
   }
 }
 
+void run_startmenu(App& app)
+{
+  while (app.state == AppState::START) 
+  {
+    // === INPUT ===
+    
+    if (IsKeyPressed(KEY_ESCAPE)) {
+      app.state = AppState::EXIT;
+      return;
+    }
+    if (IsKeyPressed(KEY_SPACE)) {
+      app.state = AppState::GAMELOOP;
+      return;
+    }
+    
+    // === RENDERING ===
+    
+    render_start_menu(app.render_target);
+    render_to_screen(app, {0,0,0,0});
+  }
+}
+
 void setup_controls(KeyboardKey* input_map) 
 {
   input_map[(int)Actions::MOVE_LEFT]  = KEY_A;
