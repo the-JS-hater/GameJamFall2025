@@ -10,6 +10,59 @@
 #include "app.hpp"
 
 
+
+void process_turtle(Entity ent, float const dt, App& app) 
+{
+  { 
+    switch (ent.state) {
+      case TurtleState::PATHING: 
+      {
+        Vector2 pos = Vector2{ent.x, ent.y};
+        Vector2 direction = Vector2Subtract(ent.target, pos);
+        direction = Vector2Normalize(direction);
+        const float SPEED = app.world.tileSize;
+        ent.dx = SPEED * dt * direction.x;
+        ent.dy = SPEED * dt * direction.y;
+        ent.x += ent.dx;
+        ent.y += ent.dy;
+        
+        if (Vector2Distance(pos, ent.target) < 1) 
+        {
+          ent.state = TurtleState::IDLE;
+        }
+        break;
+      }
+      case TurtleState::COLLECTING: 
+      {
+        Vector2 pos = Vector2{ent.x, ent.y};
+        switch (app.world.tiles[std::make_pair(ent.x, ent.y)]) 
+        {
+          case TileType::GRASS:
+          {
+            ent.state = TurtleState::IDLE;
+            break;
+          }
+          case TileType::RIVER:
+          {
+            float const collection_speed = 100.0f;
+            app.world.waterAmount += dt * collection_speed;
+            break;
+          }
+        }
+        break;
+      }
+      case TurtleState::IDLE: 
+      {
+        // fallthrough 
+      }
+      default: 
+      {
+        // empty
+      }
+    }
+  }
+}
+
 void run_gameloop(App& app)
 {
   while (app.state == AppState::GAMELOOP)
@@ -116,52 +169,19 @@ void run_gameloop(App& app)
       }
        
       // == ENTITY STATE ==
-      { 
-        switch (ent.state) {
-          case TurtleState::PATHING: 
-          {
-            Vector2 pos = Vector2{ent.x, ent.y};
-            Vector2 direction = Vector2Subtract(ent.target, pos);
-            direction = Vector2Normalize(direction);
-            const float SPEED = app.world.tileSize;
-            ent.dx = SPEED * dt * direction.x;
-            ent.dy = SPEED * dt * direction.y;
-            ent.x += ent.dx;
-            ent.y += ent.dy;
-            
-            if (Vector2Distance(pos, ent.target) < 1) 
-            {
-              ent.state = TurtleState::IDLE;
-            }
-            break;
-          }
-          case TurtleState::COLLECTING: 
-          {
-            Vector2 pos = Vector2{ent.x, ent.y};
-            switch (app.world.tiles[std::make_pair(ent.x, ent.y)]) 
-            {
-              case TileType::GRASS:
-              {
-                ent.state = TurtleState::IDLE;
-                break;
-              }
-              case TileType::RIVER:
-              {
-                float const collection_speed = 100.0f;
-                app.world.waterAmount += dt * collection_speed;
-                break;
-              }
-            }
-            break;
-          }
-          case TurtleState::IDLE: 
-          {
-            // fallthrough 
-          }
-          default: 
-          {
-            // empty
-          }
+      switch (ent.type) {
+        case EntityType::TURTLE: 
+        {
+          process_turtle(ent, dt, app);
+          break;
+        }
+        case EntityType::EGG:
+        {
+          break;
+        }
+        defualt: 
+        { 
+          TraceLog(LOG_WARNING, "Unknown entity type");
         }
       }
     }

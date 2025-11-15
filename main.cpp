@@ -15,7 +15,7 @@ int main()
   App app = init_application();
   app.world = init_world();
   { //NOTE: TEMP
-    int const test_entities_count = 100;
+    int const test_entities_count = 0;
     for (unsigned int id = 0; id < test_entities_count; ++id)
     {
       float const max_vel = 100.0f;
@@ -24,6 +24,7 @@ int main()
       app.world.entities.push_back(
         Entity {
           id,
+          EntityType::TURTLE,
           (float)GetRandomValue(0.0f, (int)app.world.w),
           (float)GetRandomValue(0.0f, (int)app.world.h),
           
@@ -33,6 +34,7 @@ int main()
           (float)GetRandomValue(min_size, max_size),
           TurtleState::PATHING,
           Vector2{(float)GetRandomValue(0, GetScreenWidth()), (float)GetRandomValue(0, GetScreenHeight())},
+          0.0f,
           Color {
             (unsigned char)GetRandomValue(0, 255),
             (unsigned char)GetRandomValue(0, 255),
@@ -42,6 +44,20 @@ int main()
         }
       );
     }
+    float const egg_size = 50.0f;
+    float const egg_timer = 5.0f;
+    app.world.entities.push_back(
+      Entity {
+        test_entities_count,
+        EntityType::EGG,
+        0.0f, 0.0f, 0.0f, 0.0f,
+        egg_size, egg_size,
+        TurtleState::IDLE,
+        Vector2 { 0.0f, 0.0f },
+        egg_timer,
+        RED
+      }
+    );
   }
   setup_controls(app.input_map);
   init_resources(app);

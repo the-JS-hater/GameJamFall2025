@@ -13,11 +13,18 @@ enum struct TurtleState {
   COLLECTING,
 };
 
+enum struct EntityType {
+  TURTLE,
+  EGG
+};
+
 struct Entity {
   unsigned int id;
+  EntityType type;
   float x,y,dx,dy,w,h;
   TurtleState state;
   Vector2 target;
+  float egg_timer;
   Color color;
 };
 
