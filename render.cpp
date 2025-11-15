@@ -17,6 +17,7 @@ Texture2D river_bottom_left_tex;
 Texture2D river_top_left_tex;
 Texture2D river_bottom_right_tex;
 Texture2D river_top_right_tex;
+Texture2D sand_tex;
 Texture2D egg_tex;
 Texture2D start_screen_tex;
 Texture2D flugsvamp_tex;
@@ -43,6 +44,7 @@ void init_resources(App const& app)
   river_top_left_tex      = LoadTexture("resources/River_Top_Left.png");
   river_bottom_right_tex  = LoadTexture("resources/River_Bottom_Right.png");
   river_top_right_tex     = LoadTexture("resources/River_Top_Right.png");
+  sand_tex                = LoadTexture("resources/sand.png");
   egg_tex                 = LoadTexture("resources/Egg.png");
   start_screen_tex        = LoadTexture("resources/Start_Screen.png");
   flugsvamp_tex           = LoadTexture("resources/Flugsvamp.png");
@@ -66,6 +68,7 @@ void init_resources(App const& app)
   Image river_top_left_image      = LoadImageFromTexture(river_top_left_tex);         
   Image river_bottom_right_image  = LoadImageFromTexture(river_bottom_right_tex);
   Image river_top_right_image     = LoadImageFromTexture(river_top_right_tex);
+  Image sand_image                = LoadImageFromTexture(sand_tex);
   Image egg_image                 = LoadImageFromTexture(egg_tex);
   Image start_screen_image        = LoadImageFromTexture(start_screen_tex);
   Image flugsvamp_image           = LoadImageFromTexture(flugsvamp_tex);
@@ -87,6 +90,7 @@ void init_resources(App const& app)
   ImageResize(&river_top_left_image, size, size);
   ImageResize(&river_bottom_right_image, size, size);
   ImageResize(&river_top_right_image, size, size);
+  ImageResize(&sand_image, size, size);
   ImageResize(&egg_image, size, size);
   ImageResize(&stick_image, size, size);
 
@@ -121,6 +125,7 @@ void init_resources(App const& app)
   river_top_left_tex      = LoadTextureFromImage(river_top_left_image);
   river_bottom_right_tex  = LoadTextureFromImage(river_bottom_right_image);
   river_top_right_tex     = LoadTextureFromImage(river_top_right_image);
+  sand_tex                = LoadTextureFromImage(sand_image);
   egg_tex                 = LoadTextureFromImage(egg_image);
   start_screen_tex        = LoadTextureFromImage(start_screen_image);
   flugsvamp_tex           = LoadTextureFromImage(flugsvamp_image);
@@ -168,6 +173,9 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
           break;
         case TileImage::RIVER_VERTICAL:
           tex = &river_vertical_tex;
+          break;
+        case TileImage::SAND:
+          tex = &sand_tex;
           break;
         }
       }

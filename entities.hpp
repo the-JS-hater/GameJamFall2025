@@ -53,11 +53,13 @@ struct Entity {
 
 enum struct TileType {
   GRASS,
+  SAND,
   RIVER,
 };
 
 enum struct TileImage {
   GRASS,
+  SAND,
   RIVER_HORIZONTAL,
   RIVER_VERTICAL,
   RIVER_BOTTOM_LEFT,

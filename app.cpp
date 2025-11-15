@@ -78,8 +78,13 @@ TileImage get_river_bend_from_neighbors(std::vector<bool> const& neighbors) {
   }
 }
 
+void add_sand(World& world, std::pair<int, int> const& position) {
+  world.tiles[position] = TileType::SAND;
+  world.tileImages[position] = TileImage::SAND;
+}
+
 void generate_river_images(World& world, std::pair<int, int> const& start) {
-  // use bfs to fill in the river images
+  // use dfs to fill in the river images
   std::vector<std::pair<int, int>> queue = {start};
   std::set<std::pair<int, int>> visited = {start};
   while (!queue.empty()) {
@@ -97,10 +102,20 @@ void generate_river_images(World& world, std::pair<int, int> const& start) {
           visited.insert(neighbour);
         }
       } else {
+        add_sand(world, neighbour);
         neighbors.push_back(false);
       }
     }
     world.tileImages[current] = get_river_bend_from_neighbors(neighbors);
+    // add sand to diagonals:
+    static std::array<std::pair<int, int>, 4> diagonal_offsets = {std::make_pair(1, -1), std::make_pair(-1, -1), std::make_pair(-1, 1), std::make_pair(1, 1)};
+    for (int i = 0; i < 4; ++i) {
+      auto offset = diagonal_offsets[i];
+      auto neighbour = std::make_pair(current.first + offset.first, current.second + offset.second);
+      if (world.tiles[neighbour] != TileType::RIVER) {
+        add_sand(world, neighbour);
+      }
+    }
   }
 }
 
