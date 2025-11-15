@@ -168,7 +168,7 @@ void check_collisions(std::vector<Entity>& entities) {
           }
           else if (b.type == EntityType::TURTLE)
           {
-            const float push_strength = 5.0f;
+            const float push_strength = 1.0f;
             Vector2 push_dir = Vector2Subtract(a.get_center(), b.get_center());
             a.push_force += Vector2Scale(Vector2Normalize(push_dir), push_strength / Vector2Length(push_dir));
           }
