@@ -1,10 +1,9 @@
+#include "render.hpp"
 #include "raylib.h"
 #include "math.h"
 #include <algorithm>
 #include <set>
-#include <string>
 
-#include "render.hpp"
 #include "app.hpp"
 
 
@@ -347,14 +346,16 @@ void render_entities(App& app, std::set<unsigned int> const& selected_turtles)
             DrawTextEx(GetFontDefault(), "Working hard >.<", { ent.x + (0.25f * ent.w), ent.y - text_offset}, font_size, spacing, WHITE);
             DrawTextureEx(defualt_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
             break;
+          case TurtleState::EATING:
+            DrawTextEx(GetFontDefault(), "mmm... borgirs", { ent.x + (0.25f * ent.w), ent.y - text_offset}, font_size, spacing, WHITE);
+            DrawTextureEx(defualt_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+            break;
         }
         break;
       }
       case EntityType::EGG:
-      {
         DrawTextureEx(egg_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
         break;
-      }
       case EntityType::BATH:
       {
         Texture2D tex = app.world.waterAmount > 6000.0f ?
@@ -364,13 +365,15 @@ void render_entities(App& app, std::set<unsigned int> const& selected_turtles)
         DrawTextureEx(tex, { ent.x, ent.y }, 1.0f /*rotation*/, scale, WHITE);  
         break;
       }
-    case EntityType::STICK:
-      DrawTexture(stick_tex, ent.x, ent.y, WHITE);
-      break;
-    case EntityType::DONKEN:
-      float scale = 0.2 + ent.built_percent * (0.8 / 100);
-      Color color = ColorLerp(GRAY, WHITE, ent.built_percent / 100.0f);
-      DrawTextureEx(donken_tex, { ent.x, ent.y }, 0.0f /*rotation*/, scale, color);  
+      case EntityType::STICK:
+        DrawTexture(stick_tex, ent.x, ent.y, WHITE);
+        break;
+      case EntityType::DONKEN:
+      {
+        float scale = 0.2 + ent.built_percent * (0.8 / 100);
+        Color color = WHITE;
+        DrawTextureEx(donken_tex, { ent.x, ent.y }, 0.0f /*rotation*/, scale, color);  
+      }
     }
   }
 }
