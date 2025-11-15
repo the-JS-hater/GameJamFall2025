@@ -90,26 +90,28 @@ void run_gameloop(App& app)
 
     // === UPDATE ===
 
+    Vector2 point_initial = { initial_x, initial_y };
+    Vector2 point_final = { final_x, final_y };
+    point_initial = GetScreenToWorld2D(point_initial, app.camera); 
+    point_final = GetScreenToWorld2D(point_final, app.camera);
+    float x1 = point_initial.x;
+    float y1 = point_initial.y;
+    float x2 = point_final.x;
+    float y2 = point_final.y;
+
+    Rectangle selection_rect = {
+      std::min(x2, x1),
+      std::min(y2, y1),
+      abs(x2 - x1),
+      abs(y2 - y1)
+    };
+
     for (Entity& ent : app.world.entities) 
     {
-      Vector2 point_initial = { initial_x, initial_y };
-      Vector2 point_final = { final_x, final_y };
-      point_initial = GetScreenToWorld2D(point_initial, app.camera); 
-      point_final = GetScreenToWorld2D(point_final, app.camera);
-      float x1 = point_initial.x;
-      float y1 = point_initial.y;
-      float x2 = point_final.x;
-      float y2 = point_final.y;
-      
       if (
         make_selection && 
         CheckCollisionRecs(
-          Rectangle {
-            std::min(x2, x1),
-            std::min(y2, y1),
-            abs(x2 - x1),
-            abs(y2 - y1)
-          },
+          selection_rect,
           Rectangle { ent.x, ent.y, ent.w, ent.h }
         )
       ) {
