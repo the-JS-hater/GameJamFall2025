@@ -47,7 +47,7 @@ void process_turtle(Entity& ent, float const dt, App& app)
     switch (ent.state) {
       case TurtleState::PATHING: 
       {
-        Vector2 pos = Vector2{ent.x, ent.y};
+        Vector2 pos = ent.get_center();
         Vector2 direction = Vector2Subtract(ent.target, pos);
         direction = Vector2Normalize(direction);
         const float SPEED = app.world.tileSize;
