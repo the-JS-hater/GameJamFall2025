@@ -75,7 +75,7 @@ void create_sticks(World& world) {
 
 int main() 
 {	
-  SetTraceLogLevel(LOG_ERROR);
+  SetTraceLogLevel(LOG_WARNING);
   
   unsigned int const initial_win_w = 1920u;
   unsigned int const initial_win_h = 1080u;

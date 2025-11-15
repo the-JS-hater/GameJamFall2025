@@ -25,6 +25,9 @@ Texture2D sopp_tex;
 Texture2D rock_tex;
 Texture2D stick_tex;
 Texture2D dead_turtle_tex;
+Texture2D bathtub1_tex; 
+Texture2D bathtub2_tex;
+Texture2D bathtub3_tex;
 
 
 void init_resources(App const& app) 
@@ -47,6 +50,9 @@ void init_resources(App const& app)
   rock_tex                = LoadTexture("resources/Rock.png");
   stick_tex               = LoadTexture("resources/Stick.png");
   dead_turtle_tex         = LoadTexture("resources/Turtle_Dead.png");
+  bathtub1_tex            = LoadTexture("resources/Bath_1.png");
+  bathtub2_tex            = LoadTexture("resources/Bath_2.png");
+  bathtub3_tex            = LoadTexture("resources/Bath_3.png");
   
   Image grass_image               = LoadImageFromTexture(grass_tex);
   Image turtle_image              = LoadImageFromTexture(turtle_tex);
@@ -60,15 +66,16 @@ void init_resources(App const& app)
   Image river_top_right_image     = LoadImageFromTexture(river_top_right_tex);
   Image egg_image                 = LoadImageFromTexture(egg_tex);
   Image start_screen_image        = LoadImageFromTexture(start_screen_tex);
-
   Image flugsvamp_image           = LoadImageFromTexture(flugsvamp_tex);
   Image kantarell_image           = LoadImageFromTexture(kantarell_tex);
   Image sopp_image                = LoadImageFromTexture(sopp_tex);     
   Image rock_image                = LoadImageFromTexture(rock_tex);     
   Image stick_image               = LoadImageFromTexture(stick_tex);
-
   Image dead_turtle_image         = LoadImageFromTexture(dead_turtle_tex);
-
+  Image bathtub1_image            = LoadImageFromTexture(bathtub1_tex);
+  Image bathtub2_image            = LoadImageFromTexture(bathtub2_tex);
+  Image bathtub3_image            = LoadImageFromTexture(bathtub3_tex);
+  
   int size = app.world.tileSize;
   ImageResize(&grass_image, size, size);
   ImageResize(&river_horizontal_image, size, size);
@@ -85,6 +92,11 @@ void init_resources(App const& app)
   ImageResize(&sopp_image, small_size, small_size);
   ImageResize(&rock_image, small_size, small_size);
   ImageResize(&stick_image, small_size, small_size);
+
+  int big_size = 2 * size;
+  ImageResize(&bathtub1_image, big_size, big_size);
+  ImageResize(&bathtub2_image, big_size, big_size);
+  ImageResize(&bathtub3_image, big_size, big_size);
   
   float const turtle_height_ratio = 
     (float)turtle_image.height / (float)turtle_image.width;
@@ -113,7 +125,10 @@ void init_resources(App const& app)
   sopp_tex                = LoadTextureFromImage(sopp_image);     
   rock_tex                = LoadTextureFromImage(rock_image);     
   stick_tex               = LoadTextureFromImage(stick_image);    
-  dead_turtle_tex         = LoadTextureFromImage(dead_turtle_image);    
+  dead_turtle_tex         = LoadTextureFromImage(dead_turtle_image);
+  bathtub1_tex            = LoadTextureFromImage(bathtub1_image);
+  bathtub2_tex            = LoadTextureFromImage(bathtub2_image);
+  bathtub3_tex            = LoadTextureFromImage(bathtub3_image);
 }
 
 void render_scene(App& app, std::set<unsigned int> const& selected_turtles) 
@@ -121,7 +136,6 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
 
   BeginTextureMode(app.render_target);
   ClearBackground(WHITE);
-
   BeginMode2D(app.camera);
 
   for (int screenY = -app.world.tileSize; screenY < GetScreenHeight() + app.world.tileSize; screenY += app.world.tileSize) {
@@ -181,7 +195,6 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
       }
     }
   }
-   
   { // === RENDER ENTITIES ===
     for (Entity ent : app.world.entities) 
     {
@@ -205,7 +218,10 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
         }
         case EntityType::BATH:
         {
-          DrawRectangle(ent.x, ent.y, 100, 100, BROWN);
+          Texture2D tex = app.world.waterAmount > 6000.0f ?
+            bathtub3_tex : app.world.waterAmount > 2000.0f ?
+              bathtub2_tex : bathtub1_tex;
+          DrawTextureEx(tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
           break;
         }
       case EntityType::STICK:
