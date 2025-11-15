@@ -11,11 +11,17 @@ enum struct TurtleState {
   IDLE,
   PATHING,
   COLLECTING,
+  BATHING,
 };
 
 enum struct EntityType {
   TURTLE,
   EGG,
+  BATH,
+};
+
+enum struct BuildingType {
+  NONE,
   BATH,
 };
 
@@ -26,6 +32,7 @@ struct Entity {
   TurtleState state;
   Vector2 target;
   float egg_timer;
+  BuildingType touching;
 };
 
 enum struct TileType {

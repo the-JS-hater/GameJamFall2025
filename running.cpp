@@ -28,9 +28,16 @@ void process_turtle(Entity& ent, float const dt, App& app)
         
         if (Vector2Distance(pos, ent.target) < 1) 
         {
-          if (app.world.tiles[world_to_tile_pos(app.world, ent.x, ent.y)] == TileType::RIVER) {
+          if (ent.touching == BuildingType::BATH)
+          {
+            ent.state = TurtleState::BATHING;
+          }
+          else if (app.world.tiles[world_to_tile_pos(app.world, ent.x, ent.y)] == TileType::RIVER)
+          {
             ent.state = TurtleState::COLLECTING;
-          } else {
+          }
+          else
+          {
             ent.state = TurtleState::IDLE;
           }
         }
@@ -55,6 +62,14 @@ void process_turtle(Entity& ent, float const dt, App& app)
         }
         break;
       }
+      case TurtleState::BATHING:
+      {
+        float const draining_speed = 200.0f;
+        if (app.world.waterAmount > dt * draining_speed) {
+          app.world.waterAmount -= dt * draining_speed;
+        }
+        break;
+      }
       case TurtleState::IDLE: 
       {
         // fallthrough 
@@ -62,6 +77,19 @@ void process_turtle(Entity& ent, float const dt, App& app)
       default: 
       {
         // empty
+      }
+    }
+  }
+}
+
+void check_collisions(std::vector<Entity>& entities) {
+  for (auto& a : entities) {
+    a.touching = BuildingType::NONE;
+    for (auto& b : entities) {
+      if (CheckCollisionRecs(Rectangle{a.x, a.y, a.w, a.h}, Rectangle{b.x, b.y, b.w, b.h})) {
+        if (a.type == EntityType::TURTLE && b.type == EntityType::BATH) {
+          a.touching = BuildingType::BATH;
+        }
       }
     }
   }
@@ -136,6 +164,8 @@ void run_gameloop(App& app)
 
     // === UPDATE ===
 
+    check_collisions(app.world.entities);
+
     Vector2 point_initial = { initial_x, initial_y };
     Vector2 point_final = { final_x, final_y };
     point_initial = GetScreenToWorld2D(point_initial, app.camera); 
@@ -188,7 +218,7 @@ void run_gameloop(App& app)
           }
           break;
         }
-        defualt: 
+        default: 
         { 
           TraceLog(LOG_WARNING, "Unknown entity type");
         }

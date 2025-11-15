@@ -46,6 +46,8 @@ void create_bath(World& world, float x, float y) {
   bath.type = EntityType::BATH;
   bath.x = x;
   bath.y = y;
+  bath.w = 100.0f;
+  bath.h = 100.0f;
   world.entities.push_back(bath);
 }
 
