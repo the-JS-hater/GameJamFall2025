@@ -273,7 +273,7 @@ void run_gameloop(App& app)
         }
         default: 
         { 
-          TraceLog(LOG_WARNING, "Unknown entity type");
+          TraceLog(LOG_INFO, "Unknown entity type");
         }
       }
     }

@@ -2,62 +2,8 @@
 
 #include "running.hpp"
 #include "render.hpp"
+#include "entities.hpp"
 
-void spawn_turtle(App& app, float x, float y)
-{
-  float const turtle_w = app.world.tileSize;
-  float const turtle_h = 1.2f * turtle_w;
-  Entity new_ent{ };
-  new_ent.id = app.world.next_id++;
-  new_ent.type = EntityType::TURTLE; 
-  new_ent.x = x;
-  new_ent.y = y;
-  new_ent.w = turtle_w;
-  new_ent.h = turtle_h;
-  new_ent.dx = 0.0f;
-  new_ent.dy = 0.0f;
-  new_ent.state = TurtleState::IDLE,
-  new_ent.moistness = 100.0f;
-  app.world.entities.push_back(new_ent);
-}
-
-void spawn_egg(App& app, float x, float y)
-{
-  float const egg_size = app.world.tileSize;
-  float const egg_timer = 5.0f;
-  Entity new_ent { };
-  new_ent.id = app.world.next_id++;
-  new_ent.type = EntityType::EGG; 
-  new_ent.x = x;
-  new_ent.y = y;
-  new_ent.w = egg_size;
-  new_ent.h = egg_size;
-  new_ent.dx = 0.0f;
-  new_ent.dy = 0.0f;
-  new_ent.egg_timer = egg_timer;
-  app.world.entities.push_back(new_ent);
-}
-
-void create_stick(World& world, float x, float y) {
-  Entity stick;
-  stick.id = world.next_id++;
-  stick.type = EntityType::STICK;
-  stick.x = x;
-  stick.y = y;
-  stick.w = world.tileSize;
-  stick.h = world.tileSize;
-  world.entities.push_back(stick);
-}
-
-void create_sticks(World& world) {
-  for (int y = -30; y < 30; ++y) {
-    for (int x = -30; x < 30; ++x) {
-      if (GetRandomValue(0, 10) == 0 && world.tiles.find(std::make_pair(x, y)) == world.tiles.end()) {
-        create_stick(world, x * world.tileSize, y * world.tileSize);
-      }
-    }
-  }
-}
 
 int main() 
 {	
@@ -74,12 +20,12 @@ int main()
     for (unsigned int id = 0; id < test_entities_count; ++id)
     {
       spawn_turtle(
-        app,
+        app.world,
         (float)GetRandomValue(0, app.world.w),
         (float)GetRandomValue(0, app.world.h)
       );
       spawn_egg(
-        app,
+        app.world,
         (float)GetRandomValue(0, app.world.w),
         (float)GetRandomValue(0, app.world.h)
       );
