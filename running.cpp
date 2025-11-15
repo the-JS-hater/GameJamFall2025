@@ -83,8 +83,10 @@ void process_turtle(Entity& ent, float const dt, App& app)
       case TurtleState::BATHING:
       {
         float const draining_speed = 200.0f;
-        if (app.world.waterAmount > dt * draining_speed) {
+        float const max_moistness = 100.0f;
+        if (app.world.waterAmount > dt * draining_speed && ent.moistness < max_moistness) {
           app.world.waterAmount -= dt * draining_speed;
+          ent.moistness += dt * draining_speed;
         }
         break;
       }
@@ -100,6 +102,15 @@ void process_turtle(Entity& ent, float const dt, App& app)
           app.world.stick_amount -= stick_drainage * dt;
           float const building_speed = 1.0f;
           ent.assigned_building->built_percent += building_speed * dt;
+        }
+      }
+      case TurtleState::EATING:
+      {
+        const float eat_speed = 200.0f;
+        const float max_hunger = 100.0f;
+        if (app.world.burger_amount > eat_speed * dt && ent.hunger < max_hunger) {
+          app.world.burger_amount -= eat_speed * dt;
+          ent.hunger += eat_speed * dt;
         }
       }
       case TurtleState::IDLE: 
@@ -291,6 +302,7 @@ void run_gameloop(App& app)
           {
             ent.type = EntityType::TURTLE;
             ent.moistness = 100.0f;
+            ent.hunger = 100.0f;
           }
           break;
         }

@@ -43,6 +43,7 @@ struct Entity {
   float egg_timer;
   BuildingType touching;
   float moistness;
+  float hunger;
   float built_percent;
   Entity* assigned_building = nullptr;
 };

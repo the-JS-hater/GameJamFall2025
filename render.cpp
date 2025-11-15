@@ -28,6 +28,7 @@ Texture2D dead_turtle_tex;
 Texture2D bathtub1_tex; 
 Texture2D bathtub2_tex;
 Texture2D bathtub3_tex;
+Texture2D donken_tex;
 
 
 void init_resources(App const& app) 
@@ -53,6 +54,7 @@ void init_resources(App const& app)
   bathtub1_tex            = LoadTexture("resources/Bath_1.png");
   bathtub2_tex            = LoadTexture("resources/Bath_2.png");
   bathtub3_tex            = LoadTexture("resources/Bath_3.png");
+  donken_tex              = LoadTexture("resources/Donken.png");
   
   Image grass_image               = LoadImageFromTexture(grass_tex);
   Image turtle_image              = LoadImageFromTexture(turtle_tex);
@@ -75,6 +77,7 @@ void init_resources(App const& app)
   Image bathtub1_image            = LoadImageFromTexture(bathtub1_tex);
   Image bathtub2_image            = LoadImageFromTexture(bathtub2_tex);
   Image bathtub3_image            = LoadImageFromTexture(bathtub3_tex);
+  Image donken_image              = LoadImageFromTexture(donken_tex);
   
   int size = app.world.tileSize;
   ImageResize(&grass_image, size, size);
@@ -97,6 +100,7 @@ void init_resources(App const& app)
   ImageResize(&bathtub1_image, big_size, big_size);
   ImageResize(&bathtub2_image, big_size, big_size);
   ImageResize(&bathtub3_image, big_size, big_size);
+  ImageResize(&donken_image, big_size, big_size);
   
   float const turtle_height_ratio = 
     (float)turtle_image.height / (float)turtle_image.width;
@@ -129,6 +133,7 @@ void init_resources(App const& app)
   bathtub1_tex            = LoadTextureFromImage(bathtub1_image);
   bathtub2_tex            = LoadTextureFromImage(bathtub2_image);
   bathtub3_tex            = LoadTextureFromImage(bathtub3_image);
+  donken_tex              = LoadTextureFromImage(donken_image);
 }
 
 void render_scene(App& app, std::set<unsigned int> const& selected_turtles) 
@@ -342,6 +347,10 @@ void render_entities(App& app, std::set<unsigned int> const& selected_turtles)
     case EntityType::STICK:
       DrawTexture(stick_tex, ent.x, ent.y, WHITE);
       break;
+    case EntityType::DONKEN:
+      float scale = 0.2 + ent.built_percent * (0.8 / 100);
+      Color color = ColorLerp(GRAY, WHITE, ent.built_percent / 100.0f);
+      DrawTextureEx(donken_tex, { ent.x, ent.y }, 0.0f /*rotation*/, scale, color);  
     }
   }
 }
