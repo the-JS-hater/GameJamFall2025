@@ -57,3 +57,14 @@ void create_sticks(World& world) {
   }
 }
 
+void create_donken(World& world, float x, float y) {
+  Entity donken;
+  donken.id = world.next_id++;
+  donken.type = EntityType::DONKEN;
+  donken.x = x;
+  donken.y = y;
+  donken.w = world.tileSize;
+  donken.h = world.tileSize;
+  donken.built_percent = 0.0f;
+  world.entities.push_back(donken);
+}

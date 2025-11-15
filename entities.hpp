@@ -13,6 +13,7 @@ enum struct TurtleState {
   COLLECTING,
   BATHING,
   BUILDING,
+  EATING,
   DEAD,
 };
 
@@ -20,6 +21,7 @@ enum struct EntityType {
   TURTLE,
   EGG,
   BATH,
+  DONKEN,
   STICK,
 };
 
@@ -27,6 +29,8 @@ enum struct BuildingType {
   NONE,
   UN_BUILT_BATH,
   BUILT_BATH,
+  UN_BUILT_DONKEN,
+  BUILT_DONKEN,
   STICK,
 };
 
@@ -60,7 +64,8 @@ enum struct TileImage {
 
 enum struct ActionType {
   MOVE,
-  BUILD,
+  BUILD_BATH,
+  BUILD_DONKEN,
 };
 
 struct World {
@@ -68,6 +73,7 @@ struct World {
   std::vector<Entity> entities;
   float waterAmount = 0.0f;
   float stick_amount = 0.0f;
+  float burger_amount = 0.0f;
   std::map<std::pair<int, int>, TileType> tiles;
   std::map<std::pair<int, int>, TileImage> tileImages;
   int tileSize = 128;
@@ -81,3 +87,4 @@ void spawn_turtle(World&, float, float);
 void spawn_egg(World&, float, float);
 void create_stick(World&, float, float);
 void create_sticks(World&);
+void create_donken(World&, float, float);

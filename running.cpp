@@ -11,6 +11,30 @@
 
 
 
+void find_next_state(World& world, Entity& ent) {
+  if (ent.touching == BuildingType::BUILT_BATH)
+  {
+    ent.state = TurtleState::BATHING;
+  }
+  else if (ent.touching == BuildingType::UN_BUILT_BATH || ent.touching == BuildingType::UN_BUILT_DONKEN)
+  {
+    ent.state = TurtleState::BUILDING;
+  }
+  else if (ent.touching == BuildingType::BUILT_DONKEN)
+  {
+    ent.state = TurtleState::EATING;
+  }
+  else if (world.tiles[world_to_tile_pos(world, ent.x, ent.y)] == TileType::RIVER
+            || ent.touching == BuildingType::STICK)
+  {
+    ent.state = TurtleState::COLLECTING;
+  }
+  else
+  {
+    ent.state = TurtleState::IDLE;
+  }
+}
+
 void process_turtle(Entity& ent, float const dt, App& app) 
 {
   if (ent.moistness < 0.0f) {
@@ -34,23 +58,7 @@ void process_turtle(Entity& ent, float const dt, App& app)
         
         if (Vector2Distance(pos, ent.target) < 1) 
         {
-          if (ent.touching == BuildingType::BUILT_BATH)
-          {
-            ent.state = TurtleState::BATHING;
-          }
-          else if (ent.touching == BuildingType::UN_BUILT_BATH)
-          {
-            ent.state = TurtleState::BUILDING;
-          }
-          else if (app.world.tiles[world_to_tile_pos(app.world, ent.x, ent.y)] == TileType::RIVER
-                   || ent.touching == BuildingType::STICK)
-          {
-            ent.state = TurtleState::COLLECTING;
-          }
-          else
-          {
-            ent.state = TurtleState::IDLE;
-          }
+          find_next_state(app.world, ent);
         }
         break;
       }
@@ -126,6 +134,18 @@ void check_collisions(std::vector<Entity>& entities) {
               a.touching = BuildingType::BUILT_BATH;
             }
           }
+          else if (b.type == EntityType::DONKEN)
+          {
+            if (b.built_percent < 100)
+            {
+              a.touching = BuildingType::UN_BUILT_DONKEN;
+              a.assigned_building = &b;
+            }
+            else
+            {
+              a.touching = BuildingType::BUILT_DONKEN;
+            }
+          }
           else if (b.type == EntityType::STICK) 
           {
             a.touching = BuildingType::STICK;
@@ -153,7 +173,10 @@ void run_gameloop(App& app)
     }
     if (IsKeyPressed(KEY_B)) {
       printf("we building now mode\n");
-      app.world.current_action = ActionType::BUILD;
+      app.world.current_action = ActionType::BUILD_BATH;
+    }
+    if (IsKeyPressed(KEY_N)) {
+      app.world.current_action = ActionType::BUILD_DONKEN;
     }
     if (IsKeyPressed(KEY_M)) {
       app.world.current_action = ActionType::MOVE;
@@ -230,8 +253,12 @@ void run_gameloop(App& app)
       abs(y2 - y1)
     };
 
-    if (make_click && app.world.current_action == ActionType::BUILD) {
+    if (make_click && app.world.current_action == ActionType::BUILD_BATH) {
       create_bath(app.world, x1, y1);
+    }
+    else if (make_click && app.world.current_action == ActionType::BUILD_DONKEN) {
+      create_donken(app.world, x1, y1);
+      app.world.current_action = ActionType::MOVE;
     }
 
     for (Entity& ent : app.world.entities) 
