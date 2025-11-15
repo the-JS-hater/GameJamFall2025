@@ -13,7 +13,7 @@
 
 void process_turtle(Entity ent, float const dt, App& app) 
 {
-  { 
+  {
     switch (ent.state) {
       case TurtleState::PATHING: 
       {
@@ -28,7 +28,11 @@ void process_turtle(Entity ent, float const dt, App& app)
         
         if (Vector2Distance(pos, ent.target) < 1) 
         {
-          ent.state = TurtleState::IDLE;
+          if (app.world.tiles[std::make_pair((int)(ent.x / app.world.tileSize), (int)(ent.y / app.world.tileSize))] == TileType::RIVER) {
+            ent.state = TurtleState::COLLECTING;
+          } else {
+            ent.state = TurtleState::IDLE;
+          }
         }
         break;
       }
