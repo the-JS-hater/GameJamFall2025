@@ -38,7 +38,8 @@ void process_turtle(Entity& ent, float const dt, App& app)
           {
             ent.state = TurtleState::BATHING;
           }
-          else if (app.world.tiles[world_to_tile_pos(app.world, ent.x, ent.y)] == TileType::RIVER)
+          else if (app.world.tiles[world_to_tile_pos(app.world, ent.x, ent.y)] == TileType::RIVER
+                   || ent.touching == BuildingType::STICK)
           {
             ent.state = TurtleState::COLLECTING;
           }
@@ -51,20 +52,19 @@ void process_turtle(Entity& ent, float const dt, App& app)
       }
       case TurtleState::COLLECTING: 
       {
+        float const collection_speed = 100.0f;
         Vector2 pos = Vector2{ent.x, ent.y};
-        switch (app.world.tiles[world_to_tile_pos(app.world, ent.x, ent.y)]) 
+        if (ent.touching == BuildingType::STICK)
         {
-          case TileType::GRASS:
-          {
-            ent.state = TurtleState::IDLE;
-            break;
-          }
-          case TileType::RIVER:
-          {
-            float const collection_speed = 100.0f;
-            app.world.waterAmount += dt * collection_speed;
-            break;
-          }
+          app.world.stick_amount += dt * collection_speed;
+        }
+        else if (app.world.tiles[world_to_tile_pos(app.world, ent.x, ent.y)] == TileType::RIVER)
+        {
+          app.world.waterAmount += dt * collection_speed;
+        }
+        else
+        {
+          ent.state = TurtleState::IDLE;
         }
         break;
       }
@@ -95,6 +95,10 @@ void check_collisions(std::vector<Entity>& entities) {
       if (CheckCollisionRecs(Rectangle{a.x, a.y, a.w, a.h}, Rectangle{b.x, b.y, b.w, b.h})) {
         if (a.type == EntityType::TURTLE && b.type == EntityType::BATH) {
           a.touching = BuildingType::BATH;
+        }
+        else if (a.type == EntityType::TURTLE && b.type == EntityType::STICK) 
+        {
+          a.touching = BuildingType::STICK;
         }
       }
     }

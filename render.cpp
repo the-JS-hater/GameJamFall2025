@@ -150,6 +150,11 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
         DrawRectangle(ent.x, ent.y, 100, 100, BROWN);
         break;
       }
+      case EntityType::STICK:
+      {
+        DrawRectangle(ent.x, ent.y, ent.w, ent.h, YELLOW);
+        break;
+      }
     }
   }
   EndMode2D();
@@ -255,14 +260,15 @@ void render_to_screen(App& app, Rectangle selection)
     
     char const *resolution_printout = 
       TextFormat(
-        "Resolution %d x %d, %s\nFPS: %d\nWater: %.0f", 
+        "Resolution %d x %d, %s\nFPS: %d\nWater: %.0f\nSticks: %.0f", 
         (int)res_w, 
         (int)res_h, 
         scaling, 
         GetFPS(),
-        app.world.waterAmount
+        app.world.waterAmount,
+        app.world.stick_amount
       );
-    DrawText(resolution_printout, 10, 10, 20, LIME);
+    DrawText(resolution_printout, 10, 10, 20, RED);
   }
 
   float const line_thicc = 5.0f;

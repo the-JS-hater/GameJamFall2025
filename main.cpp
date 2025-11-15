@@ -52,6 +52,27 @@ void create_bath(World& world, float x, float y) {
   world.entities.push_back(bath);
 }
 
+void create_stick(World& world, float x, float y) {
+  Entity stick;
+  stick.id = entity_id++;
+  stick.type = EntityType::STICK;
+  stick.x = x;
+  stick.y = y;
+  stick.w = world.tileSize;
+  stick.h = world.tileSize;
+  world.entities.push_back(stick);
+}
+
+void create_sticks(World& world) {
+  for (int y = -30; y < 30; ++y) {
+    for (int x = -30; x < 30; ++x) {
+      if (GetRandomValue(0, 10) == 0 && world.tiles.find(std::make_pair(x, y)) == world.tiles.end()) {
+        create_stick(world, x * world.tileSize, y * world.tileSize);
+      }
+    }
+  }
+}
+
 int main() 
 {	
   SetTraceLogLevel(LOG_ERROR);
@@ -79,6 +100,7 @@ int main()
     }
     create_bath(app.world, 400, 400);
   }
+  create_sticks(app.world);
   setup_controls(app.input_map);
   init_resources(app);
   

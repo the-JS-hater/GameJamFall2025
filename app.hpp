@@ -19,11 +19,13 @@ enum struct EntityType {
   TURTLE,
   EGG,
   BATH,
+  STICK,
 };
 
 enum struct BuildingType {
   NONE,
   BATH,
+  STICK,
 };
 
 struct Entity {
@@ -56,6 +58,7 @@ struct World {
   float x,y,w,h;
   std::vector<Entity> entities;
   float waterAmount = 0.0f;
+  float stick_amount = 0.0f;
   std::map<std::pair<int, int>, TileType> tiles;
   std::map<std::pair<int, int>, TileImage> tileImages;
   int tileSize = 128;
