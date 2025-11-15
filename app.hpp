@@ -12,6 +12,7 @@ enum struct TurtleState {
   PATHING,
   COLLECTING,
   BATHING,
+  DEAD,
 };
 
 enum struct EntityType {
@@ -33,6 +34,7 @@ struct Entity {
   Vector2 target;
   float egg_timer;
   BuildingType touching;
+  float moistness;
 };
 
 enum struct TileType {

@@ -13,6 +13,12 @@
 
 void process_turtle(Entity& ent, float const dt, App& app) 
 {
+  ent.moistness -= dt;
+  if (ent.moistness < 0.0f) {
+    ent.state = TurtleState::DEAD;
+    return;
+  }
+
   {
     switch (ent.state) {
       case TurtleState::PATHING: 
@@ -215,6 +221,7 @@ void run_gameloop(App& app)
           if (ent.egg_timer < 0.0f)
           {
             ent.type = EntityType::TURTLE;
+            ent.moistness = 100.0f;
           }
           break;
         }

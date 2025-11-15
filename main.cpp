@@ -20,6 +20,7 @@ void spawn_turtle(App& app, float x, float y)
   new_ent.dx = 0.0f;
   new_ent.dy = 0.0f;
   new_ent.state = TurtleState::IDLE,
+  new_ent.moistness = 100.0f;
   app.world.entities.push_back(new_ent);
 }
 
