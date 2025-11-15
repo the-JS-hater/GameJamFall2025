@@ -11,3 +11,4 @@ void render_start_menu(RenderTexture2D&);
 void render_to_screen(App&, Rectangle);
 void set_display_resolution(Vector2, App&);
 void init_resources(App const&); 
+void render_entities(App&, std::set<unsigned int> const&); 
