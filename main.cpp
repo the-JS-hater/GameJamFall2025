@@ -1,6 +1,7 @@
 #include "raylib.h"
 
 #include "running.hpp"
+#include "render.hpp"
 
 
 int main() 
@@ -43,6 +44,7 @@ int main()
     }
   }
   setup_controls(app.input_map);
+  init_resources(app);
   
   while (!WindowShouldClose())
   { 
