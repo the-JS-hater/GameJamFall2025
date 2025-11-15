@@ -46,11 +46,6 @@ int main()
         run_gameloop(app);
         break;
       }
-      case AppState::PAUSED: 
-      {
-        run_pausemenu(app);
-        break;
-      }
       case AppState::START:
       { 
         run_startmenu(app);

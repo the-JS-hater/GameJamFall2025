@@ -59,7 +59,7 @@ enum struct TileImage {
 };
 
 enum struct ActionType {
-  MOVE,
+  DEFAULT,
   BUILD,
 };
 
@@ -72,7 +72,7 @@ struct World {
   std::map<std::pair<int, int>, TileImage> tileImages;
   int tileSize = 128;
   std::set<unsigned int> selected_turtles;
-  ActionType current_action = ActionType::MOVE;
+  ActionType current_action = ActionType::DEFAULT;
   unsigned int next_id = 0;
 };
 

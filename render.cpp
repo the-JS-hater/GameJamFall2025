@@ -235,32 +235,6 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
   EndTextureMode();
 }
 
-void render_pause_menu(RenderTexture2D& render_target)
-{
-  BeginTextureMode(render_target);
-  ClearBackground(WHITE);
-  	
-  char const *pause_text = "GAME IS PAUSED";
-  Font GetFontDefault(void);
-  int const font_size = 60; 
-  int const spacing = 2;
-  Vector2 text_size = MeasureTextEx(
-    GetFontDefault(), 
-    pause_text, 
-    font_size, 
-    spacing
-  );
-  // Draw centered text
-  DrawText(
-    pause_text, 
-    render_target.texture.width / 2 - (int)(text_size.x / 2.0f), 
-    render_target.texture.height / 2 - (int)(text_size.y / 2.0f), 
-    font_size,
-    RED
-  );
-  EndTextureMode();
-}
-
 void render_start_menu(RenderTexture2D& render_target)
 {
   BeginTextureMode(render_target);
