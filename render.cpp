@@ -2,6 +2,7 @@
 #include "math.h"
 #include <algorithm>
 #include <set>
+#include <string>
 
 #include "render.hpp"
 #include "app.hpp"
@@ -102,12 +103,11 @@ void init_resources(App const& app)
   ImageResize(&bathtub3_image, big_size, big_size);
   ImageResize(&donken_image, big_size, big_size);
   
-  float const turtle_height_ratio = 
-    (float)turtle_image.height / (float)turtle_image.width;
-  int const turtle_height = (int)((float)size * turtle_height_ratio);
-  ImageResize(&turtle_image, size, turtle_height);
-  ImageResize(&turtle2_image, size, turtle_height);
-  ImageResize(&turtle3_image, size, turtle_height);
+  float const turtle_width = app.world.tileSize;
+  float const turtle_height = 1.2f * turtle_width;
+  ImageResize(&turtle_image, turtle_width, turtle_height);
+  ImageResize(&turtle2_image, turtle_width, turtle_height);
+  ImageResize(&turtle3_image, turtle_width, turtle_height);
   ImageResize(&dead_turtle_image, turtle_height, size);
 
   ImageResize(&start_screen_image, 1920u, 1080u);
@@ -301,32 +301,52 @@ void render_to_screen(App& app, Rectangle selection)
 }
 
 void render_entities(App& app, std::set<unsigned int> const& selected_turtles) 
-{ // === RENDER ENTITIES ===
+{ 
+  std::sort(
+    app.world.entities.begin(), 
+    app.world.entities.end(), 
+    [](const Entity& ent1, const Entity& ent2)
+    { 
+      return ent1.y + ent1.h < ent2.y + ent2.h; 
+    }
+  );
   for (Entity ent : app.world.entities) 
   {
     switch (ent.type)
     {
       case EntityType::TURTLE:
       {
+        static float const text_offset = 20.0f;
+        static float const font_size = 10.0f;
+        static float const spacing = 2.0f;
+            
+        Texture2D defualt_turtle_tex =
+          ent.id % 3 ?
+            turtle_tex : ent.id % 7 ?
+              turtle2_tex : turtle3_tex;
         switch (ent.state) 
         {
           case TurtleState::DEAD: 
             DrawTextureEx(dead_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
             break;
           case TurtleState::PATHING:
-          case TurtleState::COLLECTING:
-          case TurtleState::BATHING:
-          case TurtleState::BUILDING: 
+            DrawTextureEx(defualt_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+            break;
           case TurtleState::IDLE:
           {
-            Texture2D choosen_turtle_tex =
-              ent.id % 3 ?
-                turtle_tex : ent.id % 7 ?
-                  turtle2_tex : turtle3_tex;
-
-            DrawTextureEx(choosen_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+            DrawTextEx(GetFontDefault(), "thinking...", { ent.x + (0.25f * ent.w), ent.y - text_offset}, font_size, spacing, WHITE);
+            DrawTextureEx(defualt_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
             break;
           }
+          case TurtleState::BATHING:
+            DrawTextEx(GetFontDefault(), "~.~ ohhh", { ent.x + (0.25f * ent.w), ent.y - text_offset}, font_size, spacing, WHITE);
+            DrawTextureEx(defualt_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+            break;
+          case TurtleState::COLLECTING:
+          case TurtleState::BUILDING:
+            DrawTextEx(GetFontDefault(), "Working hard >.<", { ent.x + (0.25f * ent.w), ent.y - text_offset}, font_size, spacing, WHITE);
+            DrawTextureEx(defualt_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+            break;
         }
         break;
       }
