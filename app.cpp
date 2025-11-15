@@ -2,6 +2,10 @@
 
 #include "math.h"
 
+#include <vector>
+#include <array>
+#include <iostream>
+
 
 App init_application()
 {
@@ -68,6 +72,48 @@ void generateRiver(World& world, std::pair<int, int>& position, int direction, i
   }
 }
 
+TileImage get_river_bend_from_neighbors(std::vector<bool> const& neighbors) {
+  if (neighbors == std::vector<bool>{true, true, false, false}) {
+    return TileImage::RIVER_BOTTOM_LEFT;
+  } else if (neighbors == std::vector<bool>{false, true, true, false}) {
+    return TileImage::RIVER_BOTTOM_RIGHT;
+  } else if (neighbors == std::vector<bool>{false, false, true, true}) {
+    return TileImage::RIVER_TOP_RIGHT;
+  } else if (neighbors == std::vector<bool>{true, false, false, true}) {
+    return TileImage::RIVER_TOP_LEFT;
+  } else if (neighbors == std::vector<bool>{true, false, true, false}) {
+    return TileImage::RIVER_HORIZONTAL;
+  } else if (neighbors == std::vector<bool>{false, true, false, true}) {
+    return TileImage::RIVER_VERTICAL;
+  }
+}
+
+void generate_river_images(World& world, std::pair<int, int> const& start) {
+  // use bfs to fill in the river images
+  std::vector<std::pair<int, int>> queue = {start};
+  std::set<std::pair<int, int>> visited = {start};
+  while (!queue.empty()) {
+    auto current = queue.back();
+    queue.pop_back();
+    std::vector<bool> neighbors;
+    static std::array<std::pair<int, int>, 4> offsets = {std::make_pair(1, 0), std::make_pair(0, -1), std::make_pair(-1, 0), std::make_pair(0, 1)};
+    for (int i = 0; i < 4; ++i) {
+      auto offset = offsets[i];
+      auto neighbour = std::make_pair(current.first + offset.first, current.second + offset.second);
+      if (world.tiles[neighbour] == TileType::RIVER) {
+        neighbors.push_back(true);
+        if (visited.find(neighbour) == visited.end()) {
+          queue.push_back(neighbour);
+          visited.insert(neighbour);
+        }
+      } else {
+        neighbors.push_back(false);
+      }
+    }
+    world.tileImages[current] = get_river_bend_from_neighbors(neighbors);
+  }
+}
+
 World init_world() 
 {
   unsigned int const size = 1000;
@@ -83,6 +129,7 @@ World init_world()
   generateRiver(world, start, -1, 100);
   start = std::make_pair(1, 0);
   generateRiver(world, start, 1, 100);
+  generate_river_images(world, std::make_pair(0, 0));
   
   return world;
 }

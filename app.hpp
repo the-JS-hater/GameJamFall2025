@@ -26,11 +26,22 @@ enum struct TileType {
   RIVER,
 };
 
+enum struct TileImage {
+  GRASS,
+  RIVER_HORIZONTAL,
+  RIVER_VERTICAL,
+  RIVER_BOTTOM_LEFT,
+  RIVER_TOP_LEFT,
+  RIVER_BOTTOM_RIGHT,
+  RIVER_TOP_RIGHT,
+};
+
 struct World {
   float x,y,w,h;
   std::vector<Entity> entities;
   float waterAmount = 0.0f;
   std::map<std::pair<int, int>, TileType> tiles;
+  std::map<std::pair<int, int>, TileImage> tileImages;
   int tileSize = 128;
   std::set<unsigned int> selected_turtles;
   // NOTE: add additional game-level global data

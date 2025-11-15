@@ -86,13 +86,33 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
       int x = (int)(position.x / app.world.tileSize);
       int y = (int)(position.y / app.world.tileSize);
       Color color = GREEN;
-      auto tileType = app.world.tiles.find(std::make_pair(x, y));
-      if (tileType != app.world.tiles.end() && tileType->second == TileType::RIVER) {
-        color = BLUE;
+      auto tileImage = app.world.tileImages.find(std::make_pair(x, y));
+      Texture2D* tex = &grass_tex; 
+      if (tileImage != app.world.tileImages.end()) {
+        switch (tileImage->second) {
+        case TileImage::RIVER_BOTTOM_LEFT:
+          tex = &river_bottom_left_tex;
+          break;
+        case TileImage::RIVER_BOTTOM_RIGHT:
+          tex = &river_bottom_right_tex;
+          break;
+        case TileImage::RIVER_TOP_LEFT:
+          tex = &river_top_left_tex;
+          break;
+        case TileImage::RIVER_TOP_RIGHT:
+          tex = &river_top_right_tex;
+          break;
+        case TileImage::RIVER_HORIZONTAL:
+          tex = &river_horizontal_tex;
+          break;
+        case TileImage::RIVER_VERTICAL:
+          tex = &river_vertical_tex;
+          break;
+        }
       }
       float const scale = app.world.tileSize / (float)grass_tex.width;
       Vector2 vec_pos = { (float)x * app.world.tileSize, (float)y * app.world.tileSize };
-      DrawTextureEx(grass_tex, vec_pos, 1.0f /*rotation*/, 1.0f, WHITE);  
+      DrawTextureEx(*tex, vec_pos, 1.0f /*rotation*/, 1.0f, WHITE);  
     }
   }
     
