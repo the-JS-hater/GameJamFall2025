@@ -18,7 +18,7 @@ App init_application()
   auto [res_w, res_h] = settings.render_resolution;
   app.render_target = LoadRenderTexture((int)round(res_w), (int)(res_h));
   app.logical_resolution = Vector2{1920.0f, 1080.0f};
-  app.state = AppState::GAMELOOP;
+  app.state = AppState::START;
   
   app.camera = Camera2D {
     { res_w / 2.0f, res_h / 2.0f }, // Offset
