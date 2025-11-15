@@ -208,9 +208,7 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
           DrawRectangle(ent.x, ent.y, 100, 100, BROWN);
           break;
         }
-      }
       case EntityType::STICK:
-      {
         DrawRectangle(ent.x, ent.y, ent.w, ent.h, YELLOW);
         break;
       }
