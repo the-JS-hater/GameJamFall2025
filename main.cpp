@@ -3,6 +3,42 @@
 #include "running.hpp"
 #include "render.hpp"
 
+static unsigned entity_id = 0;
+
+
+void spawn_turtle(App& app, float x, float y)
+{
+  float const turtle_w = app.world.tileSize;
+  float const turtle_h = 1.2f * turtle_w;
+  Entity new_ent{ };
+  new_ent.id = entity_id++;
+  new_ent.type = EntityType::TURTLE; 
+  new_ent.x = x;
+  new_ent.y = y;
+  new_ent.w = turtle_w;
+  new_ent.h = turtle_h;
+  new_ent.dx = 0.0f;
+  new_ent.dy = 0.0f;
+  new_ent.state = TurtleState::IDLE,
+  app.world.entities.push_back(new_ent);
+}
+
+void spawn_egg(App& app, float x, float y)
+{
+  float const egg_size = app.world.tileSize;
+  float const egg_timer = 5.0f;
+  Entity new_ent { };
+  new_ent.id = entity_id++;
+  new_ent.type = EntityType::EGG; 
+  new_ent.x = x;
+  new_ent.y = y;
+  new_ent.w = egg_size;
+  new_ent.h = egg_size;
+  new_ent.dx = 0.0f;
+  new_ent.dy = 0.0f;
+  new_ent.egg_timer = egg_timer;
+  app.world.entities.push_back(new_ent);
+}
 
 int main() 
 {	
@@ -15,49 +51,20 @@ int main()
   App app = init_application();
   app.world = init_world();
   { //NOTE: TEMP
-    int const test_entities_count = 0;
+    int const test_entities_count = 10;
     for (unsigned int id = 0; id < test_entities_count; ++id)
     {
-      float const max_vel = 100.0f;
-      float const min_size = 10.0f;
-      float const max_size = 50.0f;
-      app.world.entities.push_back(
-        Entity {
-          id,
-          EntityType::TURTLE,
-          (float)GetRandomValue(0.0f, (int)app.world.w),
-          (float)GetRandomValue(0.0f, (int)app.world.h),
-          
-          (float)GetRandomValue(0.0f, max_vel),
-          (float)GetRandomValue(0.0f, max_vel),
-          (float)GetRandomValue(min_size, max_size),
-          (float)GetRandomValue(min_size, max_size),
-          TurtleState::PATHING,
-          Vector2{(float)GetRandomValue(0, GetScreenWidth()), (float)GetRandomValue(0, GetScreenHeight())},
-          0.0f,
-          Color {
-            (unsigned char)GetRandomValue(0, 255),
-            (unsigned char)GetRandomValue(0, 255),
-            (unsigned char)GetRandomValue(0, 255),
-            255
-          }
-        }
+      spawn_turtle(
+        app,
+        (float)GetRandomValue(0, app.world.w),
+        (float)GetRandomValue(0, app.world.h)
+      );
+      spawn_egg(
+        app,
+        (float)GetRandomValue(0, app.world.w),
+        (float)GetRandomValue(0, app.world.h)
       );
     }
-    float const egg_size = 50.0f;
-    float const egg_timer = 5.0f;
-    app.world.entities.push_back(
-      Entity {
-        test_entities_count,
-        EntityType::EGG,
-        0.0f, 0.0f, 0.0f, 0.0f,
-        egg_size, egg_size,
-        TurtleState::IDLE,
-        Vector2 { 0.0f, 0.0f },
-        egg_timer,
-        RED
-      }
-    );
   }
   setup_controls(app.input_map);
   init_resources(app);

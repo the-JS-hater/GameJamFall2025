@@ -25,7 +25,6 @@ struct Entity {
   TurtleState state;
   Vector2 target;
   float egg_timer;
-  Color color;
 };
 
 enum struct TileType {
