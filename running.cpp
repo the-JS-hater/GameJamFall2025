@@ -13,11 +13,11 @@
 
 void process_turtle(Entity& ent, float const dt, App& app) 
 {
-  ent.moistness -= dt;
   if (ent.moistness < 0.0f) {
     ent.state = TurtleState::DEAD;
     return;
   }
+  ent.moistness -= dt;
 
   {
     switch (ent.state) {
