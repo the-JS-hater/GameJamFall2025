@@ -58,7 +58,7 @@ struct App {
   Vector2 logical_resolution;
   Camera2D camera;
   // array_size should match nr. of enums in Actions, see running.hpp
-  KeyboardKey input_map[6]; 
+  KeyboardKey input_map[4]; 
 
   // NOTE: add additional application-level global data
 };

@@ -8,14 +8,14 @@ int main()
 {	
   SetTraceLogLevel(LOG_ERROR);
   
-  unsigned int const initial_win_w = 1366u;
-  unsigned int const initial_win_h = 768u;
+  unsigned int const initial_win_w = 1920u;
+  unsigned int const initial_win_h = 1080u;
   InitWindow(initial_win_w, initial_win_h, "Title");
   
   App app = init_application();
   app.world = init_world();
   { //NOTE: TEMP
-    int const test_entities_count = 1;
+    int const test_entities_count = 100;
     for (unsigned int id = 0; id < test_entities_count; ++id)
     {
       float const max_vel = 100.0f;
@@ -45,6 +45,8 @@ int main()
   }
   setup_controls(app.input_map);
   init_resources(app);
+  
+  ToggleBorderlessWindowed();
   
   while (!WindowShouldClose())
   { 

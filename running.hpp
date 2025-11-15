@@ -8,8 +8,6 @@ enum struct Actions {
   MOVE_RIGHT  = 1,
   MOVE_UP     = 2,
   MOVE_DOWN   = 3,
-  ZOOM_IN     = 4,
-  ZOOM_OUT    = 5,
 };
 
 void run_gameloop(App&);

@@ -25,21 +25,13 @@ void run_gameloop(App& app)
       app.state = AppState::PAUSED;
       return;
     }
-    if (IsKeyPressed(KEY_F)) {
-      ToggleBorderlessWindowed();
-    }
-    if (IsKeyPressed(KEY_Q)) {
-      // NOTE: (morgan) does not work on home PC
-      ToggleFullscreen();
-    }
     
     static Vector2 target_pos = {
       (float)GetScreenWidth() / 2.0f, 
       (float)GetScreenHeight() / 2.0f
     };
     
-    { //NOTE: TEMP
-
+    { 
       float const camera_speed = 300.0f;
       if (is_actionkey_down(Actions::MOVE_LEFT, app.input_map)) 
       {
@@ -56,14 +48,6 @@ void run_gameloop(App& app)
       if (is_actionkey_down(Actions::MOVE_DOWN, app.input_map)) 
       {
         target_pos.y += dt * camera_speed;
-      }
-      if (is_actionkey_down(Actions::ZOOM_IN, app.input_map)) 
-      {
-        app.camera.zoom -= dt * 0.5f;
-      }
-      if (is_actionkey_down(Actions::ZOOM_OUT, app.input_map)) 
-      {
-        app.camera.zoom += dt * 0.5f;
       }
     }
 
@@ -181,8 +165,6 @@ void setup_controls(KeyboardKey* input_map)
   input_map[(int)Actions::MOVE_RIGHT] = KEY_D;
   input_map[(int)Actions::MOVE_UP]    = KEY_W;
   input_map[(int)Actions::MOVE_DOWN]  = KEY_S;
-  input_map[(int)Actions::ZOOM_IN]    = KEY_J;
-  input_map[(int)Actions::ZOOM_OUT]   = KEY_K;
 }
 
 bool is_actionkey_pressed(Actions action, KeyboardKey* input_map) 
