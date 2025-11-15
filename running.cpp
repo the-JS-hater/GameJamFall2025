@@ -72,8 +72,8 @@ void run_gameloop(App& app)
     static float final_x = 0.0f;
     static float final_y = 0.0f;
 
-    std::set<unsigned int> selected_turtles;
     bool make_selection = false;
+    bool make_click = false;
     {
       if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
         auto [x, y] = GetMousePosition();
@@ -84,7 +84,12 @@ void run_gameloop(App& app)
         auto [x, y] = GetMousePosition();
         final_x = x;
         final_y = y;
-        make_selection = true;
+        if (Vector2Distance(Vector2{initial_x, initial_y}, Vector2{final_x, final_y}) < 16) {
+          make_click = true;
+        } else {
+          app.world.selected_turtles.clear();
+          make_selection = true;
+        }
       }
     }
 
@@ -116,7 +121,12 @@ void run_gameloop(App& app)
         )
       ) {
         printf("SELECTED\n");
-        selected_turtles.insert(ent.id);
+        app.world.selected_turtles.insert(ent.id);
+      }
+      
+      if (make_click && app.world.selected_turtles.find(ent.id) != app.world.selected_turtles.end()) {
+        ent.target = Vector2{selection_rect.x, selection_rect.y};
+        ent.state = TurtleState::PATHING;
       }
 
       if (ent.state == TurtleState::PATHING) 
@@ -124,7 +134,7 @@ void run_gameloop(App& app)
         Vector2 pos = Vector2{ent.x, ent.y};
         Vector2 direction = Vector2Subtract(ent.target, pos);
         direction = Vector2Normalize(direction);
-        const float SPEED = 20;
+        const float SPEED = app.world.tileSize;
         ent.dx = SPEED * dt * direction.x;
         ent.dy = SPEED * dt * direction.y;
         ent.x += ent.dx;
@@ -141,7 +151,7 @@ void run_gameloop(App& app)
     app.camera.target.x = Lerp(app.camera.target.x, target_pos.x, lerp_amount);
     app.camera.target.y = Lerp(app.camera.target.y, target_pos.y, lerp_amount);
     
-    render_scene(app, selected_turtles);
+    render_scene(app, app.world.selected_turtles);
     render_to_screen(app, 
       Rectangle {
         std::min((float)GetMouseX(), initial_x),

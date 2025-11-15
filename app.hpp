@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include <vector>
 #include <map>
+#include <set>
 
 // TODO:(morgan) move entities and world into more appropriate header
 
@@ -31,6 +32,7 @@ struct World {
   float waterAmount = 0.0f;
   std::map<std::pair<int, int>, TileType> tiles;
   int tileSize = 128;
+  std::set<unsigned int> selected_turtles;
   // NOTE: add additional game-level global data
 };
 
