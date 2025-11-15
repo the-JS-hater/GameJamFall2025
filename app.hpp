@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include <vector>
+#include <map>
 
 // TODO:(morgan) move entities and world into more appropriate header
 
@@ -20,7 +21,6 @@ struct Entity {
 };
 
 enum struct TileType {
-  NONE,
   GRASS,
   RIVER,
 };
@@ -29,6 +29,8 @@ struct World {
   float x,y,w,h;
   std::vector<Entity> entities;
   float waterAmount = 0.0f;
+  std::map<std::pair<int, int>, TileType> tiles;
+  /*
   std::vector<std::vector<TileType>> tiles {
     {TileType::GRASS, TileType::GRASS, TileType::RIVER, TileType::RIVER,TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS},
     {TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::RIVER,TileType::RIVER, TileType::RIVER, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS},
@@ -39,7 +41,7 @@ struct World {
     {TileType::GRASS, TileType::RIVER, TileType::RIVER, TileType::RIVER,TileType::RIVER, TileType::RIVER, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS},
     {TileType::RIVER, TileType::RIVER, TileType::GRASS, TileType::GRASS,TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS},
     {TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS,TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS}
-  };
+  };*/
   int tileSize = 128;
   // NOTE: add additional game-level global data
 };

@@ -2,6 +2,7 @@
 #include "math.h"
 #include <algorithm>
 #include <set>
+#include <iostream>
 
 #include "render.hpp"
 #include "app.hpp"
@@ -19,11 +20,27 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
 
   BeginMode2D(app.camera);
 
+  /*
   for (int y = 0; y < app.world.tiles.size(); ++y) {
     for (int x = 0; x < app.world.tiles[y].size(); ++x) {
       Color color = GREEN;
       switch (app.world.tiles[y][x]) {
       case TileType::RIVER:
+        color = BLUE;
+      }
+      DrawRectangle(x * app.world.tileSize, y * app.world.tileSize, app.world.tileSize, app.world.tileSize, color);
+    }
+  }
+  */
+
+  for (int screenY = -app.world.tileSize; screenY < GetScreenHeight() + app.world.tileSize; screenY += app.world.tileSize) {
+    for (int screenX = -app.world.tileSize; screenX < GetScreenWidth() + app.world.tileSize; screenX += app.world.tileSize) {
+      Vector2 position = GetScreenToWorld2D(Vector2{(float)screenX, (float)screenY}, app.camera);
+      int x = (int)(position.x / app.world.tileSize);
+      int y = (int)(position.y / app.world.tileSize);
+      Color color = GREEN;
+      auto tileType = app.world.tiles.find(std::make_pair(x, y));
+      if (tileType != app.world.tiles.end() && tileType->second == TileType::RIVER) {
         color = BLUE;
       }
       DrawRectangle(x * app.world.tileSize, y * app.world.tileSize, app.world.tileSize, app.world.tileSize, color);

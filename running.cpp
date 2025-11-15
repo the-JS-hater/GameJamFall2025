@@ -102,8 +102,8 @@ void run_gameloop(App& app)
       Vector2 transformed_max = 
         GetScreenToWorld2D(
           Vector2 {
-            fabs(final_x - initial_x),
-            fabs(final_y - initial_y)
+            abs(final_x - initial_x),
+            abs(final_y - initial_y)
           },
           app.camera
         );
@@ -114,7 +114,7 @@ void run_gameloop(App& app)
         transformed_max.y,
       };
       if (
-        make_selection and
+        make_selection &&
         CheckCollisionRecs(
           transformed,
           Rectangle { ent.x, ent.y, ent.w, ent.h }
@@ -150,8 +150,8 @@ void run_gameloop(App& app)
       Rectangle {
         std::min((float)GetMouseX(), initial_x),
         std::min((float)GetMouseY(), initial_y),
-        fabs((float)GetMouseX() - initial_x),
-        fabs((float)GetMouseY() - initial_y)
+        abs((float)GetMouseX() - initial_x),
+        abs((float)GetMouseY() - initial_y)
       }
     );
   }

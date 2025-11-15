@@ -23,11 +23,11 @@ int main()
       app.world.entities.push_back(
         Entity {
           id,
-          (float)GetRandomValue(0.0, (int)app.world.w),
-          (float)GetRandomValue(0.0, (int)app.world.h),
+          (float)GetRandomValue(0.0f, (int)app.world.w),
+          (float)GetRandomValue(0.0f, (int)app.world.h),
           
-          (float)GetRandomValue(0.0, max_vel),
-          (float)GetRandomValue(0.0, max_vel),
+          (float)GetRandomValue(0.0f, max_vel),
+          (float)GetRandomValue(0.0f, max_vel),
           (float)GetRandomValue(min_size, max_size),
           (float)GetRandomValue(min_size, max_size),
           TurtleState::PATHING,

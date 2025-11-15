@@ -28,6 +28,46 @@ App init_application()
   return app;
 };
 
+int clamp(int value, int min, int max) {
+  if (value < min) {
+    return min;
+  } else if (value > max) {
+    return max;
+  } else {
+    return value;
+  }
+}
+
+/*
+ * Generates the river from position, generating roughly length tiles in direction.
+ * direction 1 means right, direction -1 means left, no other directions allowed pls.
+ */
+void generateRiver(World& world, std::pair<int, int>& position, int direction, int length) {
+  while (--length) {
+    world.tiles[position] = TileType::RIVER;
+    // randomly decide which direction to go:
+    // -1 means up, 0 means right/left depending on direction, 1 means down.
+    switch (GetRandomValue(-1, 1)) {
+    case -1:
+      --position.second;
+      world.tiles[position] = TileType::RIVER;
+      position.first += direction;
+      world.tiles[position] = TileType::RIVER;
+      position.first += direction;
+      break;
+    case 0:
+      position.first += direction;
+      break;
+    case 1:
+      ++position.second;
+      world.tiles[position] = TileType::RIVER;
+      position.first += direction;
+      world.tiles[position] = TileType::RIVER;
+      position.first += direction;
+    }
+  }
+}
+
 World init_world() 
 {
   unsigned int const size = 1000;
@@ -37,6 +77,10 @@ World init_world()
   world.w = size;
   world.h = size;
   world.entities = std::vector<Entity>();
+  auto start = std::make_pair(0, 0);
+  generateRiver(world, start, -1, 100);
+  start = std::make_pair(0, 0);
+  generateRiver(world, start, 1, 100);
   
   return world;
 }
