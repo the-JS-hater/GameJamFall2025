@@ -133,7 +133,6 @@ void init_resources(App const& app)
 
 void render_scene(App& app, std::set<unsigned int> const& selected_turtles) 
 {
-
   BeginTextureMode(app.render_target);
   ClearBackground(WHITE);
   BeginMode2D(app.camera);
@@ -195,69 +194,8 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
       }
     }
   }
-  { // === RENDER ENTITIES ===
-    for (Entity ent : app.world.entities) 
-    {
-      switch (ent.type)
-      {
-        case EntityType::TURTLE:
-        {
-          Texture2D choosen_turtle_tex =
-            ent.state == TurtleState::DEAD ?
-              dead_turtle_tex : ent.id % 3 ?
-                turtle_tex : ent.id % 7 ?
-                  turtle2_tex : turtle3_tex;
-
-          DrawTextureEx(choosen_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
-          break;
-        }
-        case EntityType::EGG:
-        {
-          DrawTextureEx(egg_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
-          break;
-        }
-        case EntityType::BATH:
-        {
-          Texture2D tex = app.world.waterAmount > 6000.0f ?
-            bathtub3_tex : app.world.waterAmount > 2000.0f ?
-              bathtub2_tex : bathtub1_tex;
-          float scale = 0.2 + ent.built_percent * (0.8 / 100);
-          DrawTextureEx(tex, { ent.x, ent.y }, 1.0f /*rotation*/, scale, WHITE);  
-          break;
-        }
-      case EntityType::STICK:
-        DrawTexture(stick_tex, ent.x, ent.y, WHITE);
-        break;
-      }
-    }
-  }
+  render_entities(app, selected_turtles);
   EndMode2D();
-  EndTextureMode();
-}
-
-void render_pause_menu(RenderTexture2D& render_target)
-{
-  BeginTextureMode(render_target);
-  ClearBackground(WHITE);
-  	
-  char const *pause_text = "GAME IS PAUSED";
-  Font GetFontDefault(void);
-  int const font_size = 60; 
-  int const spacing = 2;
-  Vector2 text_size = MeasureTextEx(
-    GetFontDefault(), 
-    pause_text, 
-    font_size, 
-    spacing
-  );
-  // Draw centered text
-  DrawText(
-    pause_text, 
-    render_target.texture.width / 2 - (int)(text_size.x / 2.0f), 
-    render_target.texture.height / 2 - (int)(text_size.y / 2.0f), 
-    font_size,
-    RED
-  );
   EndTextureMode();
 }
 
@@ -356,6 +294,58 @@ void render_to_screen(App& app, Rectangle selection)
   }
   EndDrawing();
 }
+
+void render_entities(App& app, std::set<unsigned int> const& selected_turtles) 
+{ // === RENDER ENTITIES ===
+  for (Entity ent : app.world.entities) 
+  {
+    switch (ent.type)
+    {
+      case EntityType::TURTLE:
+      {
+        switch (ent.state) 
+        {
+          case TurtleState::DEAD: 
+            DrawTextureEx(dead_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+            break;
+          case TurtleState::PATHING:
+          case TurtleState::COLLECTING:
+          case TurtleState::BATHING:
+          case TurtleState::BUILDING: 
+          case TurtleState::IDLE:
+          {
+            Texture2D choosen_turtle_tex =
+              ent.id % 3 ?
+                turtle_tex : ent.id % 7 ?
+                  turtle2_tex : turtle3_tex;
+
+            DrawTextureEx(choosen_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+            break;
+          }
+        }
+        break;
+      }
+      case EntityType::EGG:
+      {
+        DrawTextureEx(egg_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
+        break;
+      }
+      case EntityType::BATH:
+      {
+        Texture2D tex = app.world.waterAmount > 6000.0f ?
+          bathtub3_tex : app.world.waterAmount > 2000.0f ?
+            bathtub2_tex : bathtub1_tex;
+        float scale = 0.2 + ent.built_percent * (0.8 / 100);
+        DrawTextureEx(tex, { ent.x, ent.y }, 1.0f /*rotation*/, scale, WHITE);  
+        break;
+      }
+    case EntityType::STICK:
+      DrawTexture(stick_tex, ent.x, ent.y, WHITE);
+      break;
+    }
+  }
+}
+
 
 void set_display_resolution(Vector2 resolution, App& app)
 {

@@ -167,19 +167,14 @@ void run_gameloop(App& app)
       app.state = AppState::EXIT;
       return;
     }
-    if (IsKeyPressed(KEY_P)) {
-      app.state = AppState::PAUSED;
-      return;
-    }
     if (IsKeyPressed(KEY_B)) {
-      printf("we building now mode\n");
       app.world.current_action = ActionType::BUILD_BATH;
     }
     if (IsKeyPressed(KEY_N)) {
       app.world.current_action = ActionType::BUILD_DONKEN;
     }
     if (IsKeyPressed(KEY_M)) {
-      app.world.current_action = ActionType::MOVE;
+      app.world.current_action = ActionType::DEFAULT;
     }
     
     static Vector2 target_pos = {
@@ -255,10 +250,11 @@ void run_gameloop(App& app)
 
     if (make_click && app.world.current_action == ActionType::BUILD_BATH) {
       create_bath(app.world, x1, y1);
+      app.world.current_action = ActionType::DEFAULT;
     }
     else if (make_click && app.world.current_action == ActionType::BUILD_DONKEN) {
       create_donken(app.world, x1, y1);
-      app.world.current_action = ActionType::MOVE;
+      app.world.current_action = ActionType::DEFAULT;
     }
 
     for (Entity& ent : app.world.entities) 
@@ -320,28 +316,6 @@ void run_gameloop(App& app)
         abs((float)GetMouseY() - initial_y)
       }
     );
-  }
-}
-
-void run_pausemenu(App& app)
-{
-  while (app.state == AppState::PAUSED) 
-  {
-    // === INPUT ===
-    
-    if (IsKeyPressed(KEY_ESCAPE)) {
-      app.state = AppState::EXIT;
-      return;
-    }
-    if (IsKeyPressed(KEY_G)) {
-      app.state = AppState::GAMELOOP;
-      return;
-    }
-    
-    // === RENDERING ===
-    
-    render_pause_menu(app.render_target);
-    render_to_screen(app, {0,0,0,0});
   }
 }
 
