@@ -133,3 +133,7 @@ World init_world()
   
   return world;
 }
+
+std::pair<int, int> world_to_tile_pos(World const& world, float x, float y) {
+  return std::make_pair((int)(x / (float)world.tileSize), (int)(y / (float)world.tileSize));
+}

@@ -85,3 +85,4 @@ struct App {
 
 App init_application(void);
 World init_world(void); 
+std::pair<int, int> world_to_tile_pos(World const& world, float x, float y);

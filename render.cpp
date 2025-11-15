@@ -209,7 +209,7 @@ void render_to_screen(App& app, Rectangle selection)
     
     char const *resolution_printout = 
       TextFormat(
-        "Resolution %d x %d, %s\nFPS: %d\nWater: %d", 
+        "Resolution %d x %d, %s\nFPS: %d\nWater: %.0f", 
         (int)res_w, 
         (int)res_h, 
         scaling, 

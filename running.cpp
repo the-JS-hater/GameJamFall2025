@@ -11,7 +11,7 @@
 
 
 
-void process_turtle(Entity ent, float const dt, App& app) 
+void process_turtle(Entity& ent, float const dt, App& app) 
 {
   {
     switch (ent.state) {
@@ -28,7 +28,7 @@ void process_turtle(Entity ent, float const dt, App& app)
         
         if (Vector2Distance(pos, ent.target) < 1) 
         {
-          if (app.world.tiles[std::make_pair((int)(ent.x / app.world.tileSize), (int)(ent.y / app.world.tileSize))] == TileType::RIVER) {
+          if (app.world.tiles[world_to_tile_pos(app.world, ent.x, ent.y)] == TileType::RIVER) {
             ent.state = TurtleState::COLLECTING;
           } else {
             ent.state = TurtleState::IDLE;
@@ -39,7 +39,7 @@ void process_turtle(Entity ent, float const dt, App& app)
       case TurtleState::COLLECTING: 
       {
         Vector2 pos = Vector2{ent.x, ent.y};
-        switch (app.world.tiles[std::make_pair(ent.x, ent.y)]) 
+        switch (app.world.tiles[world_to_tile_pos(app.world, ent.x, ent.y)]) 
         {
           case TileType::GRASS:
           {
