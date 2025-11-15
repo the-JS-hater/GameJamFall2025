@@ -13,6 +13,8 @@ enum struct Actions {
 void run_gameloop(App&);
 void run_pausemenu(App&);
 
+void process_turtle(Entity, float const, App&); 
+
 // NOTE:(raylib.h) Use GetKeyPressed() to allow redefining
 void setup_controls(KeyboardKey*); 
 bool is_actionkey_pressed(Actions, KeyboardKey*);
