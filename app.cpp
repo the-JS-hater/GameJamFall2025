@@ -137,3 +137,14 @@ World init_world()
 std::pair<int, int> world_to_tile_pos(World const& world, float x, float y) {
   return std::make_pair((int)(x / (float)world.tileSize), (int)(y / (float)world.tileSize));
 }
+
+void create_bath(World& world, float x, float y) {
+  Entity bath {};
+  bath.id = world.next_id++;
+  bath.type = EntityType::BATH;
+  bath.x = x;
+  bath.y = y;
+  bath.w = world.tileSize;
+  bath.h = world.tileSize;
+  world.entities.push_back(bath);
+}

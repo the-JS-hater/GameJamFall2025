@@ -152,6 +152,7 @@ void run_gameloop(App& app)
       return;
     }
     if (IsKeyPressed(KEY_B)) {
+      printf("we building now mode\n");
       app.world.current_action = ActionType::BUILD;
     }
     if (IsKeyPressed(KEY_M)) {
@@ -228,6 +229,10 @@ void run_gameloop(App& app)
       abs(x2 - x1),
       abs(y2 - y1)
     };
+
+    if (make_click && app.world.current_action == ActionType::BUILD) {
+      create_bath(app.world, x1, y1);
+    }
 
     for (Entity& ent : app.world.entities) 
     {

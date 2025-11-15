@@ -73,6 +73,7 @@ struct World {
   int tileSize = 128;
   std::set<unsigned int> selected_turtles;
   ActionType current_action = ActionType::MOVE;
+  unsigned int next_id = 0;
 };
 
 enum struct Scaling {
@@ -108,3 +109,4 @@ struct App {
 App init_application(void);
 World init_world(void); 
 std::pair<int, int> world_to_tile_pos(World const& world, float x, float y);
+void create_bath(World& world, float x, float y);

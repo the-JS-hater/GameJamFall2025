@@ -3,15 +3,12 @@
 #include "running.hpp"
 #include "render.hpp"
 
-static unsigned entity_id = 0;
-
-
 void spawn_turtle(App& app, float x, float y)
 {
   float const turtle_w = app.world.tileSize;
   float const turtle_h = 1.2f * turtle_w;
   Entity new_ent{ };
-  new_ent.id = entity_id++;
+  new_ent.id = app.world.next_id++;
   new_ent.type = EntityType::TURTLE; 
   new_ent.x = x;
   new_ent.y = y;
@@ -29,7 +26,7 @@ void spawn_egg(App& app, float x, float y)
   float const egg_size = app.world.tileSize;
   float const egg_timer = 5.0f;
   Entity new_ent { };
-  new_ent.id = entity_id++;
+  new_ent.id = app.world.next_id++;
   new_ent.type = EntityType::EGG; 
   new_ent.x = x;
   new_ent.y = y;
@@ -41,20 +38,9 @@ void spawn_egg(App& app, float x, float y)
   app.world.entities.push_back(new_ent);
 }
 
-void create_bath(World& world, float x, float y) {
-  Entity bath {};
-  bath.id = entity_id++;
-  bath.type = EntityType::BATH;
-  bath.x = x;
-  bath.y = y;
-  bath.w = 100.0f;
-  bath.h = 100.0f;
-  world.entities.push_back(bath);
-}
-
 void create_stick(World& world, float x, float y) {
   Entity stick;
-  stick.id = entity_id++;
+  stick.id = world.next_id++;
   stick.type = EntityType::STICK;
   stick.x = x;
   stick.y = y;
