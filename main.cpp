@@ -40,6 +40,15 @@ void spawn_egg(App& app, float x, float y)
   app.world.entities.push_back(new_ent);
 }
 
+void create_bath(World& world, float x, float y) {
+  Entity bath {};
+  bath.id = entity_id++;
+  bath.type = EntityType::BATH;
+  bath.x = x;
+  bath.y = y;
+  world.entities.push_back(bath);
+}
+
 int main() 
 {	
   SetTraceLogLevel(LOG_ERROR);
@@ -65,6 +74,7 @@ int main()
         (float)GetRandomValue(0, app.world.h)
       );
     }
+    create_bath(app.world, 400, 400);
   }
   setup_controls(app.input_map);
   init_resources(app);

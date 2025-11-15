@@ -15,7 +15,8 @@ enum struct TurtleState {
 
 enum struct EntityType {
   TURTLE,
-  EGG
+  EGG,
+  BATH,
 };
 
 struct Entity {

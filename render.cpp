@@ -122,16 +122,22 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
    
   for (Entity ent : app.world.entities) 
   {
-    if (ent.type == EntityType::TURTLE)
+    switch (ent.type)
     {
+    case EntityType::TURTLE:
       Texture2D choosen_turtle_tex = 
         ent.id % 3 ?
         turtle_tex : ent.id % 7 ?
           turtle2_tex : turtle3_tex;
 
       DrawTextureEx(choosen_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
-    } else {
+      break;
+    case EntityType::EGG:
       DrawTextureEx(egg_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
+      break;
+    case EntityType::BATH:
+      DrawRectangle(ent.x, ent.y, 100, 100, BROWN);
+      break;
     }
   }
   EndMode2D();
