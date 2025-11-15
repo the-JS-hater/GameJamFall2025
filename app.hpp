@@ -7,10 +7,10 @@
 #include <set>
 
 // TODO:(morgan) move entities and world into more appropriate header
-
 enum struct TurtleState {
   IDLE,
-  PATHING
+  PATHING,
+  COLLECTING,
 };
 
 struct Entity {

@@ -97,34 +97,71 @@ void run_gameloop(App& app)
 
     for (Entity& ent : app.world.entities) 
     {
-      if (
-        make_selection && 
-        CheckCollisionRecs(
-          selection_rect,
-          Rectangle { ent.x, ent.y, ent.w, ent.h }
-        )
-      ) {
-        printf("SELECTED\n");
-        app.world.selected_turtles.insert(ent.id);
-      }
-      
-      if (make_click && app.world.selected_turtles.find(ent.id) != app.world.selected_turtles.end()) {
-        ent.target = Vector2{selection_rect.x, selection_rect.y};
-        ent.state = TurtleState::PATHING;
-      }
-
-      if (ent.state == TurtleState::PATHING) 
+      // == SELECTION ==
       {
-        Vector2 pos = Vector2{ent.x, ent.y};
-        Vector2 direction = Vector2Subtract(ent.target, pos);
-        direction = Vector2Normalize(direction);
-        const float SPEED = app.world.tileSize;
-        ent.dx = SPEED * dt * direction.x;
-        ent.dy = SPEED * dt * direction.y;
-        ent.x += ent.dx;
-        ent.y += ent.dy;
-        if (Vector2Distance(pos, ent.target) < 1) {
-          ent.state = TurtleState::IDLE;
+        if (
+          make_selection && 
+          CheckCollisionRecs(
+            selection_rect,
+            Rectangle { ent.x, ent.y, ent.w, ent.h }
+          )
+        ) {
+          app.world.selected_turtles.insert(ent.id);
+        }
+        
+        if (make_click && app.world.selected_turtles.find(ent.id) != app.world.selected_turtles.end()) {
+          ent.target = Vector2{selection_rect.x, selection_rect.y};
+          ent.state = TurtleState::PATHING;
+        }
+      }
+       
+      // == ENTITY STATE ==
+      { 
+        switch (ent.state) {
+          case TurtleState::PATHING: 
+          {
+            Vector2 pos = Vector2{ent.x, ent.y};
+            Vector2 direction = Vector2Subtract(ent.target, pos);
+            direction = Vector2Normalize(direction);
+            const float SPEED = app.world.tileSize;
+            ent.dx = SPEED * dt * direction.x;
+            ent.dy = SPEED * dt * direction.y;
+            ent.x += ent.dx;
+            ent.y += ent.dy;
+            
+            if (Vector2Distance(pos, ent.target) < 1) 
+            {
+              ent.state = TurtleState::IDLE;
+            }
+            break;
+          }
+          case TurtleState::COLLECTING: 
+          {
+            Vector2 pos = Vector2{ent.x, ent.y};
+            switch (app.world.tiles[std::make_pair(ent.x, ent.y)]) 
+            {
+              case TileType::GRASS:
+              {
+                ent.state = TurtleState::IDLE;
+                break;
+              }
+              case TileType::RIVER:
+              {
+                float const collection_speed = 100.0f;
+                app.world.waterAmount += dt * collection_speed;
+                break;
+              }
+            }
+            break;
+          }
+          case TurtleState::IDLE: 
+          {
+            // fallthrough 
+          }
+          default: 
+          {
+            // empty
+          }
         }
       }
     }

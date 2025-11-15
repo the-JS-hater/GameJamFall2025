@@ -71,7 +71,6 @@ void init_resources(App const& app)
   river_top_right_tex     = LoadTextureFromImage(river_top_right_image);
 }
 
-
 void render_scene(App& app, std::set<unsigned int> const& selected_turtles) 
 {
 
@@ -110,9 +109,9 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
           break;
         }
       }
-      float const scale = app.world.tileSize / (float)grass_tex.width;
+      static float const magic_scale_constant = 1.02f;
       Vector2 vec_pos = { (float)x * app.world.tileSize, (float)y * app.world.tileSize };
-      DrawTextureEx(*tex, vec_pos, 1.0f /*rotation*/, 1.0f, WHITE);  
+      DrawTextureEx(*tex, vec_pos, 1.0f /*rotation*/, magic_scale_constant, WHITE);  
     }
   }
     
@@ -128,7 +127,6 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
   EndMode2D();
   EndTextureMode();
 }
-
 
 void render_pause_menu(RenderTexture2D& render_target)
 {
@@ -155,7 +153,6 @@ void render_pause_menu(RenderTexture2D& render_target)
   );
   EndTextureMode();
 }
-  
   
 void render_to_screen(App& app, Rectangle selection)
 {
@@ -195,8 +192,7 @@ void render_to_screen(App& app, Rectangle selection)
   
   DrawTexturePro(app.render_target.texture, src, dst, {0, 0}, 0.0f, WHITE);
   
-  // TODO: temp
-  {
+  { // TODO: temp
     char const *scaling = 
         app.settings.scaling == Scaling::STRETCHED ? 
         "STRETCHED" : "BLACK BARS";
@@ -222,11 +218,8 @@ void render_to_screen(App& app, Rectangle selection)
       RED
     );
   }
-
-
   EndDrawing();
 }
-
 
 void set_display_resolution(Vector2 resolution, App& app)
 {
