@@ -69,3 +69,7 @@ void create_donken(World& world, float x, float y) {
   donken.built_percent = 0.0f;
   world.entities.push_back(donken);
 }
+
+Vector2 Entity::get_center() {
+  return Vector2{x + w / 2, y + h / 2};
+}

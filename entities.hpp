@@ -46,6 +46,9 @@ struct Entity {
   float hunger;
   float built_percent;
   Entity* assigned_building = nullptr;
+  Vector2 push_force = Vector2{0.0f, 0.0f};
+
+  Vector2 get_center();
 };
 
 enum struct TileType {

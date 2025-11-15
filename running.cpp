@@ -128,7 +128,12 @@ void process_turtle(Entity& ent, float const dt, App& app)
 void check_collisions(std::vector<Entity>& entities) {
   for (auto& a : entities) {
     a.touching = BuildingType::NONE;
+    a.push_force = Vector2{0.0f, 0.0f};
     for (auto& b : entities) {
+      if (a.id == b.id)
+      {
+        continue;
+      }
       if (CheckCollisionRecs(Rectangle{a.x, a.y, a.w, a.h}, Rectangle{b.x, b.y, b.w, b.h}))
       {
         if (a.type == EntityType::TURTLE)
@@ -160,6 +165,12 @@ void check_collisions(std::vector<Entity>& entities) {
           else if (b.type == EntityType::STICK) 
           {
             a.touching = BuildingType::STICK;
+          }
+          else if (b.type == EntityType::TURTLE)
+          {
+            const float push_strength = 5.0f;
+            Vector2 push_dir = Vector2Subtract(a.get_center(), b.get_center());
+            a.push_force += Vector2Scale(Vector2Normalize(push_dir), push_strength / Vector2Length(push_dir));
           }
         }
       }
@@ -286,6 +297,12 @@ void run_gameloop(App& app)
           ent.target = Vector2{selection_rect.x, selection_rect.y};
           ent.state = TurtleState::PATHING;
         }
+      }
+
+      // == UPDATE PUSH_FORCE (SO THE TURTLES STAY APPART) ==
+      {
+        ent.x += ent.push_force.x;
+        ent.y += ent.push_force.y;
       }
        
       // == ENTITY STATE ==
