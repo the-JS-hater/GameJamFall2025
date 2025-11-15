@@ -19,6 +19,12 @@ Texture2D river_bottom_right_tex;
 Texture2D river_top_right_tex;
 Texture2D egg_tex;
 Texture2D start_screen_tex;
+Texture2D flugsvamp_tex;
+Texture2D kantarell_tex;
+Texture2D sopp_tex;
+Texture2D rock_tex;
+Texture2D stick_tex;
+Texture2D dead_turtle_tex;
 
 
 void init_resources(App const& app) 
@@ -35,6 +41,12 @@ void init_resources(App const& app)
   river_top_right_tex     = LoadTexture("resources/River_Top_Right.png");
   egg_tex                 = LoadTexture("resources/Egg.png");
   start_screen_tex        = LoadTexture("resources/Start_Screen.png");
+  flugsvamp_tex           = LoadTexture("resources/Flugsvamp.png");
+  kantarell_tex           = LoadTexture("resources/Kantarell.png");
+  sopp_tex                = LoadTexture("resources/Sopp.png");
+  rock_tex                = LoadTexture("resources/Rock.png");
+  stick_tex               = LoadTexture("resources/Stick.png");
+  dead_turtle_tex         = LoadTexture("resources/Turtle_Dead.png");
   
   Image grass_image               = LoadImageFromTexture(grass_tex);
   Image turtle_image              = LoadImageFromTexture(turtle_tex);
@@ -49,6 +61,14 @@ void init_resources(App const& app)
   Image egg_image                 = LoadImageFromTexture(egg_tex);
   Image start_screen_image        = LoadImageFromTexture(start_screen_tex);
 
+  Image flugsvamp_image           = LoadImageFromTexture(flugsvamp_tex);
+  Image kantarell_image           = LoadImageFromTexture(kantarell_tex);
+  Image sopp_image                = LoadImageFromTexture(sopp_tex);     
+  Image rock_image                = LoadImageFromTexture(rock_tex);     
+  Image stick_image               = LoadImageFromTexture(stick_tex);
+
+  Image dead_turtle_image         = LoadImageFromTexture(dead_turtle_tex);
+
   int size = app.world.tileSize;
   ImageResize(&grass_image, size, size);
   ImageResize(&river_horizontal_image, size, size);
@@ -58,6 +78,13 @@ void init_resources(App const& app)
   ImageResize(&river_bottom_right_image, size, size);
   ImageResize(&river_top_right_image, size, size);
   ImageResize(&egg_image, size, size);
+
+  int small_size = 0.33 * size;
+  ImageResize(&flugsvamp_image, small_size, small_size);
+  ImageResize(&kantarell_image, small_size, small_size);
+  ImageResize(&sopp_image, small_size, small_size);
+  ImageResize(&rock_image, small_size, small_size);
+  ImageResize(&stick_image, small_size, small_size);
   
   float const turtle_height_ratio = 
     (float)turtle_image.height / (float)turtle_image.width;
@@ -65,6 +92,7 @@ void init_resources(App const& app)
   ImageResize(&turtle_image, size, turtle_height);
   ImageResize(&turtle2_image, size, turtle_height);
   ImageResize(&turtle3_image, size, turtle_height);
+  ImageResize(&dead_turtle_image, turtle_height, size);
 
   ImageResize(&start_screen_image, 1920u, 1080u);
 
@@ -80,6 +108,12 @@ void init_resources(App const& app)
   river_top_right_tex     = LoadTextureFromImage(river_top_right_image);
   egg_tex                 = LoadTextureFromImage(egg_image);
   start_screen_tex        = LoadTextureFromImage(start_screen_image);
+  flugsvamp_tex           = LoadTextureFromImage(flugsvamp_image);
+  kantarell_tex           = LoadTextureFromImage(kantarell_image);
+  sopp_tex                = LoadTextureFromImage(sopp_image);     
+  rock_tex                = LoadTextureFromImage(rock_image);     
+  stick_tex               = LoadTextureFromImage(stick_image);    
+  dead_turtle_tex         = LoadTextureFromImage(dead_turtle_image);    
 }
 
 void render_scene(App& app, std::set<unsigned int> const& selected_turtles) 
@@ -120,35 +154,60 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
           break;
         }
       }
-      static float const magic_scale_constant = 1.02f;
       Vector2 vec_pos = { (float)x * app.world.tileSize, (float)y * app.world.tileSize };
-      DrawTextureEx(*tex, vec_pos, 0.0f /*rotation*/, magic_scale_constant, WHITE);  
+      DrawTextureEx(*tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+      if (tileImage == app.world.tileImages.end())
+      {
+        SetRandomSeed(x + y * 1000);
+        switch (GetRandomValue(0, 20)) {
+          case 1:
+            DrawTextureEx(flugsvamp_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+            break;
+          case 2:
+            DrawTextureEx(kantarell_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+            break;
+          case 3:
+            DrawTextureEx(sopp_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+            break;
+          case 4:
+            DrawTextureEx(rock_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+            break;
+          case 5:
+            DrawTextureEx(stick_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+            break;
+          default:
+            break;
+        }
+      }
     }
   }
    
-  for (Entity ent : app.world.entities) 
-  {
-    switch (ent.type)
+  { // === RENDER ENTITIES ===
+    for (Entity ent : app.world.entities) 
     {
-      case EntityType::TURTLE:
+      switch (ent.type)
       {
-        Texture2D choosen_turtle_tex = 
-          ent.id % 3 ?
-          turtle_tex : ent.id % 7 ?
-            turtle2_tex : turtle3_tex;
+        case EntityType::TURTLE:
+        {
+          Texture2D choosen_turtle_tex =
+            ent.state == TurtleState::DEAD ?
+              dead_turtle_tex : ent.id % 3 ?
+                turtle_tex : ent.id % 7 ?
+                  turtle2_tex : turtle3_tex;
 
-        DrawTextureEx(choosen_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
-        break;
-      }
-      case EntityType::EGG:
-      {
-        DrawTextureEx(egg_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
-        break;
-      }
-      case EntityType::BATH:
-      {
-        DrawRectangle(ent.x, ent.y, 100, 100, BROWN);
-        break;
+          DrawTextureEx(choosen_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
+          break;
+        }
+        case EntityType::EGG:
+        {
+          DrawTextureEx(egg_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
+          break;
+        }
+        case EntityType::BATH:
+        {
+          DrawRectangle(ent.x, ent.y, 100, 100, BROWN);
+          break;
+        }
       }
     }
   }
