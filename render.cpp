@@ -13,11 +13,6 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
   BeginTextureMode(app.render_target);
   ClearBackground(WHITE);
 
-  float render_scale_x = 
-    app.settings.render_resolution.x / app.logical_resolution.x;
-  float render_scale_y = 
-    app.settings.render_resolution.y / app.logical_resolution.y;
-
   BeginMode2D(app.camera);
 
   /*
@@ -51,16 +46,15 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
   {
     DrawRectangleRec(
       Rectangle{
-        ent.x * render_scale_x, 
-        ent.y * render_scale_y, 
-        ent.w * render_scale_x, 
-        ent.h * render_scale_y
+        ent.x, 
+        ent.y, 
+        ent.w, 
+        ent.h
       },
       selected_turtles.find(ent.id) == selected_turtles.end() ?
       ent.color : RED
     );
   }
-
   EndMode2D();
   EndTextureMode();
 }

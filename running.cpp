@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "math.h"
+#include "stdio.h"
 #include <algorithm>
 #include <set>
 
@@ -91,35 +92,28 @@ void run_gameloop(App& app)
 
     for (Entity& ent : app.world.entities) 
     {
-      Vector2 transformed_min = 
-        GetScreenToWorld2D(
-          Vector2 {
-              std::min(final_x, initial_x),
-              std::min(final_y, initial_y),
-          },
-          app.camera
-        );
-      Vector2 transformed_max = 
-        GetScreenToWorld2D(
-          Vector2 {
-            abs(final_x - initial_x),
-            abs(final_y - initial_y)
-          },
-          app.camera
-        );
-      Rectangle transformed = {
-        transformed_min.x,
-        transformed_min.y,
-        transformed_max.x,
-        transformed_max.y,
-      };
+      Vector2 point_initial = { initial_x, initial_y };
+      Vector2 point_final = { final_x, final_y };
+      point_initial = GetScreenToWorld2D(point_initial, app.camera); 
+      point_final = GetScreenToWorld2D(point_final, app.camera);
+      float x1 = point_initial.x;
+      float y1 = point_initial.y;
+      float x2 = point_final.x;
+      float y2 = point_final.y;
+      
       if (
-        make_selection &&
+        make_selection && 
         CheckCollisionRecs(
-          transformed,
+          Rectangle {
+            std::min(x2, x1),
+            std::min(y2, y1),
+            abs(x2 - x1),
+            abs(y2 - y1)
+          },
           Rectangle { ent.x, ent.y, ent.w, ent.h }
         )
       ) {
+        printf("SELECTED\n");
         selected_turtles.insert(ent.id);
       }
 

@@ -14,7 +14,7 @@ int main()
   App app = init_application();
   app.world = init_world();
   { //NOTE: TEMP
-    int const test_entities_count = 100;
+    int const test_entities_count = 1;
     for (unsigned int id = 0; id < test_entities_count; ++id)
     {
       float const max_vel = 100.0f;
