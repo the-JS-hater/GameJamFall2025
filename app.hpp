@@ -30,18 +30,6 @@ struct World {
   std::vector<Entity> entities;
   float waterAmount = 0.0f;
   std::map<std::pair<int, int>, TileType> tiles;
-  /*
-  std::vector<std::vector<TileType>> tiles {
-    {TileType::GRASS, TileType::GRASS, TileType::RIVER, TileType::RIVER,TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS},
-    {TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::RIVER,TileType::RIVER, TileType::RIVER, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS},
-    {TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS,TileType::GRASS, TileType::RIVER, TileType::RIVER, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS},
-    {TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS,TileType::GRASS, TileType::GRASS, TileType::RIVER, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS},
-    {TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS,TileType::GRASS, TileType::GRASS, TileType::RIVER, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS},
-    {TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS,TileType::GRASS, TileType::RIVER, TileType::RIVER, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS},
-    {TileType::GRASS, TileType::RIVER, TileType::RIVER, TileType::RIVER,TileType::RIVER, TileType::RIVER, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS},
-    {TileType::RIVER, TileType::RIVER, TileType::GRASS, TileType::GRASS,TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS},
-    {TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS,TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS, TileType::GRASS}
-  };*/
   int tileSize = 128;
   // NOTE: add additional game-level global data
 };

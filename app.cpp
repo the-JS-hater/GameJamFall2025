@@ -77,9 +77,11 @@ World init_world()
   world.w = size;
   world.h = size;
   world.entities = std::vector<Entity>();
-  auto start = std::make_pair(0, 0);
+  // generate a river from (0, 0) to the right and to the left
+  world.tiles[std::make_pair(0, 0)] = TileType::RIVER;
+  auto start = std::make_pair(-1, 0);
   generateRiver(world, start, -1, 100);
-  start = std::make_pair(0, 0);
+  start = std::make_pair(1, 0);
   generateRiver(world, start, 1, 100);
   
   return world;
