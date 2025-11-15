@@ -17,6 +17,7 @@ Texture2D river_bottom_left_tex;
 Texture2D river_top_left_tex;
 Texture2D river_bottom_right_tex;
 Texture2D river_top_right_tex;
+Texture2D egg_tex;
 
 
 void init_resources(App const& app) 
@@ -31,7 +32,8 @@ void init_resources(App const& app)
   river_top_left_tex      = LoadTexture("resources/River_Top_Left.png");
   river_bottom_right_tex  = LoadTexture("resources/River_Bottom_Right.png");
   river_top_right_tex     = LoadTexture("resources/River_Top_Right.png");
-
+  egg_tex                 = LoadTexture("resources/Egg.png");
+  
   Image grass_image               = LoadImageFromTexture(grass_tex);
   Image turtle_image              = LoadImageFromTexture(turtle_tex);
   Image turtle2_image             = LoadImageFromTexture(turtle2_tex);             
@@ -42,6 +44,7 @@ void init_resources(App const& app)
   Image river_top_left_image      = LoadImageFromTexture(river_top_left_tex);         
   Image river_bottom_right_image  = LoadImageFromTexture(river_bottom_right_tex);
   Image river_top_right_image     = LoadImageFromTexture(river_top_right_tex);
+  Image egg_image                 = LoadImageFromTexture(egg_tex);
 
   int size = app.world.tileSize;
   ImageResize(&grass_image, size, size);
@@ -51,6 +54,7 @@ void init_resources(App const& app)
   ImageResize(&river_top_left_image, size, size);
   ImageResize(&river_bottom_right_image, size, size);
   ImageResize(&river_top_right_image, size, size);
+  ImageResize(&egg_image, size, size);
   
   float const turtle_height_ratio = 
     (float)turtle_image.height / (float)turtle_image.width;
@@ -69,6 +73,7 @@ void init_resources(App const& app)
   river_top_left_tex      = LoadTextureFromImage(river_top_left_image);
   river_bottom_right_tex  = LoadTextureFromImage(river_bottom_right_image);
   river_top_right_tex     = LoadTextureFromImage(river_top_right_image);
+  egg_tex                 = LoadTextureFromImage(egg_image);
 }
 
 void render_scene(App& app, std::set<unsigned int> const& selected_turtles) 
@@ -114,15 +119,20 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
       DrawTextureEx(*tex, vec_pos, 1.0f /*rotation*/, magic_scale_constant, WHITE);  
     }
   }
-    
+   
   for (Entity ent : app.world.entities) 
   {
-    Texture2D choosen_turtle_tex = 
-      ent.id % 3 ?
-      turtle_tex : ent.id % 7 ?
-        turtle2_tex : turtle3_tex;
+    if (ent.type == EntityType::TURTLE)
+    {
+      Texture2D choosen_turtle_tex = 
+        ent.id % 3 ?
+        turtle_tex : ent.id % 7 ?
+          turtle2_tex : turtle3_tex;
 
-    DrawTextureEx(choosen_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
+      DrawTextureEx(choosen_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
+    } else {
+      DrawTextureEx(egg_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
+    }
   }
   EndMode2D();
   EndTextureMode();
