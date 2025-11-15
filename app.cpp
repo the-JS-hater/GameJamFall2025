@@ -32,16 +32,6 @@ App init_application()
   return app;
 };
 
-int clamp(int value, int min, int max) {
-  if (value < min) {
-    return min;
-  } else if (value > max) {
-    return max;
-  } else {
-    return value;
-  }
-}
-
 /*
  * Generates the river from position, generating roughly length tiles in direction.
  * direction 1 means right, direction -1 means left, no other directions allowed pls.
@@ -144,7 +134,7 @@ void create_bath(World& world, float x, float y) {
   bath.type = EntityType::BATH;
   bath.x = x;
   bath.y = y;
-  bath.w = world.tileSize;
-  bath.h = world.tileSize;
+  bath.w = 2.0f * world.tileSize;
+  bath.h = 2.0f * world.tileSize;
   world.entities.push_back(bath);
 }
