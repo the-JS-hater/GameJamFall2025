@@ -181,6 +181,11 @@ void run_gameloop(App& app)
         }
         case EntityType::EGG:
         {
+          ent.egg_timer -= 1.0f * dt;
+          if (ent.egg_timer < 0.0f)
+          {
+            ent.type = EntityType::TURTLE;
+          }
           break;
         }
         defualt: 
