@@ -2,7 +2,6 @@
 #include "math.h"
 #include <algorithm>
 #include <set>
-#include <iostream>
 
 #include "render.hpp"
 #include "app.hpp"
@@ -10,24 +9,66 @@
 
 Texture2D grass_tex;
 Texture2D turtle_tex;
+Texture2D turtle2_tex;
+Texture2D turtle3_tex;
+Texture2D river_horizontal_tex;
+Texture2D river_vertical_tex;
+Texture2D river_bottom_left_tex;
+Texture2D river_top_left_tex;
+Texture2D river_bottom_right_tex;
+Texture2D river_top_right_tex;
 
 
 void init_resources(App const& app) 
 {
-  grass_tex = LoadTexture("resources/Grass.png");
-  turtle_tex = LoadTexture("resources/turtle.png");
-  Image grass_image = LoadImageFromTexture(grass_tex);
-  Image turtle_image = LoadImageFromTexture(turtle_tex);
-  
+  grass_tex               = LoadTexture("resources/Grass.png");
+  turtle_tex              = LoadTexture("resources/turtle.png");
+  turtle2_tex             = LoadTexture("resources/turtle2.png");
+  turtle3_tex             = LoadTexture("resources/turtle3.png");
+  river_horizontal_tex    = LoadTexture("resources/River_Horizontal.png");
+  river_vertical_tex      = LoadTexture("resources/River_vertical_.png");
+  river_bottom_left_tex   = LoadTexture("resources/River_Bottom_Left.png");
+  river_top_left_tex      = LoadTexture("resources/River_Top_Left.png");
+  river_bottom_right_tex  = LoadTexture("resources/River_Bottom_Right.png");
+  river_top_right_tex     = LoadTexture("resources/River_Top_Right.png");
+
+  Image grass_image               = LoadImageFromTexture(grass_tex);
+  Image turtle_image              = LoadImageFromTexture(turtle_tex);
+  Image turtle2_image             = LoadImageFromTexture(turtle2_tex);             
+  Image turtle3_image             = LoadImageFromTexture(turtle3_tex);
+  Image river_horizontal_image    = LoadImageFromTexture(river_horizontal_tex);
+  Image river_vertical_image      = LoadImageFromTexture(river_vertical_tex);
+  Image river_bottom_left_image   = LoadImageFromTexture(river_bottom_left_tex);
+  Image river_top_left_image      = LoadImageFromTexture(river_top_left_tex);         
+  Image river_bottom_right_image  = LoadImageFromTexture(river_bottom_right_tex);
+  Image river_top_right_image     = LoadImageFromTexture(river_top_right_tex);
+
   int size = app.world.tileSize;
   ImageResize(&grass_image, size, size);
-  float turtle_height_ratio = 
+  ImageResize(&river_horizontal_image, size, size);
+  ImageResize(&river_vertical_image, size, size);
+  ImageResize(&river_bottom_left_image, size, size);
+  ImageResize(&river_top_left_image, size, size);
+  ImageResize(&river_bottom_right_image, size, size);
+  ImageResize(&river_top_right_image, size, size);
+  
+  float const turtle_height_ratio = 
     (float)turtle_image.height / (float)turtle_image.width;
-  int turtle_height = (int)((float)size * turtle_height_ratio);
+  int const turtle_height = (int)((float)size * turtle_height_ratio);
   ImageResize(&turtle_image, size, turtle_height);
+  ImageResize(&turtle2_image, size, turtle_height);
+  ImageResize(&turtle3_image, size, turtle_height);
 
-  grass_tex = LoadTextureFromImage(grass_image);
-  turtle_tex = LoadTextureFromImage(turtle_image);
+  grass_tex               = LoadTextureFromImage(grass_image);
+  turtle_tex              = LoadTextureFromImage(turtle_image);
+  turtle2_tex             = LoadTextureFromImage(turtle2_image); 
+  turtle3_tex             = LoadTextureFromImage(turtle3_image);
+  river_horizontal_tex    = LoadTextureFromImage(river_horizontal_image);
+  river_vertical_tex      = LoadTextureFromImage(river_vertical_image);
+  river_bottom_left_tex   = LoadTextureFromImage(river_bottom_left_image);
+  river_top_left_tex      = LoadTextureFromImage(river_top_left_image);
+  river_bottom_right_tex  = LoadTextureFromImage(river_bottom_right_image);
+  river_top_right_tex     = LoadTextureFromImage(river_top_right_image);
 }
 
 
@@ -57,9 +98,12 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
     
   for (Entity ent : app.world.entities) 
   {
-    DrawTextureEx(turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
-    // selected_turtles.find(ent.id) == selected_turtles.end() ?
-    // ent.color : RED
+    Texture2D choosen_turtle_tex = 
+      ent.id % 3 ?
+      turtle_tex : ent.id % 7 ?
+        turtle2_tex : turtle3_tex;
+
+    DrawTextureEx(choosen_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
   }
   EndMode2D();
   EndTextureMode();
