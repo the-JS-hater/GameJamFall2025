@@ -85,13 +85,13 @@ void init_resources(App const& app)
   ImageResize(&river_bottom_right_image, size, size);
   ImageResize(&river_top_right_image, size, size);
   ImageResize(&egg_image, size, size);
+  ImageResize(&stick_image, size, size);
 
   int small_size = 0.33 * size;
   ImageResize(&flugsvamp_image, small_size, small_size);
   ImageResize(&kantarell_image, small_size, small_size);
   ImageResize(&sopp_image, small_size, small_size);
   ImageResize(&rock_image, small_size, small_size);
-  ImageResize(&stick_image, small_size, small_size);
 
   int big_size = 2 * size;
   ImageResize(&bathtub1_image, big_size, big_size);
@@ -221,11 +221,12 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
           Texture2D tex = app.world.waterAmount > 6000.0f ?
             bathtub3_tex : app.world.waterAmount > 2000.0f ?
               bathtub2_tex : bathtub1_tex;
-          DrawTextureEx(tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
+          float scale = 0.2 + ent.built_percent * (0.8 / 100);
+          DrawTextureEx(tex, { ent.x, ent.y }, 1.0f /*rotation*/, scale, WHITE);  
           break;
         }
       case EntityType::STICK:
-        DrawRectangle(ent.x, ent.y, ent.w, ent.h, YELLOW);
+        DrawTexture(stick_tex, ent.x, ent.y, WHITE);
         break;
       }
     }
