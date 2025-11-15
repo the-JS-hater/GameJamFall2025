@@ -8,8 +8,32 @@
 #include "app.hpp"
 
 
+Texture2D grass_tex;
+Texture2D turtle_tex;
+
+
+void init_resources(App const& app) 
+{
+  grass_tex = LoadTexture("resources/Grass.png");
+  turtle_tex = LoadTexture("resources/turtle.png");
+  Image grass_image = LoadImageFromTexture(grass_tex);
+  Image turtle_image = LoadImageFromTexture(turtle_tex);
+  
+  int size = app.world.tileSize;
+  ImageResize(&grass_image, size, size);
+  float turtle_height_ratio = 
+    (float)turtle_image.height / (float)turtle_image.width;
+  int turtle_height = (int)((float)size * turtle_height_ratio);
+  ImageResize(&turtle_image, size, turtle_height);
+
+  grass_tex = LoadTextureFromImage(grass_image);
+  turtle_tex = LoadTextureFromImage(turtle_image);
+}
+
+
 void render_scene(App& app, std::set<unsigned int> const& selected_turtles) 
 {
+
   BeginTextureMode(app.render_target);
   ClearBackground(WHITE);
 
@@ -25,22 +49,17 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
       if (tileType != app.world.tiles.end() && tileType->second == TileType::RIVER) {
         color = BLUE;
       }
-      DrawRectangle(x * app.world.tileSize, y * app.world.tileSize, app.world.tileSize, app.world.tileSize, color);
+      float const scale = app.world.tileSize / (float)grass_tex.width;
+      Vector2 vec_pos = { (float)x * app.world.tileSize, (float)y * app.world.tileSize };
+      DrawTextureEx(grass_tex, vec_pos, 1.0f /*rotation*/, 1.0f, WHITE);  
     }
   }
     
   for (Entity ent : app.world.entities) 
   {
-    DrawRectangleRec(
-      Rectangle{
-        ent.x, 
-        ent.y, 
-        ent.w, 
-        ent.h
-      },
-      selected_turtles.find(ent.id) == selected_turtles.end() ?
-      ent.color : RED
-    );
+    DrawTextureEx(turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
+    // selected_turtles.find(ent.id) == selected_turtles.end() ?
+    // ent.color : RED
   }
   EndMode2D();
   EndTextureMode();
