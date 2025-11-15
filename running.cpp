@@ -34,9 +34,13 @@ void process_turtle(Entity& ent, float const dt, App& app)
         
         if (Vector2Distance(pos, ent.target) < 1) 
         {
-          if (ent.touching == BuildingType::BATH)
+          if (ent.touching == BuildingType::BUILT_BATH)
           {
             ent.state = TurtleState::BATHING;
+          }
+          else if (ent.touching == BuildingType::UN_BUILT_BATH)
+          {
+            ent.state = TurtleState::BUILDING;
           }
           else if (app.world.tiles[world_to_tile_pos(app.world, ent.x, ent.y)] == TileType::RIVER
                    || ent.touching == BuildingType::STICK)
@@ -76,6 +80,20 @@ void process_turtle(Entity& ent, float const dt, App& app)
         }
         break;
       }
+      case TurtleState::BUILDING:
+      {
+        if (ent.assigned_building->built_percent >= 100) {
+          ent.state = TurtleState::IDLE;
+        }
+
+        float const stick_drainage = 200.0f;
+        if (app.world.stick_amount >= stick_drainage * dt)
+        {
+          app.world.stick_amount -= stick_drainage * dt;
+          float const building_speed = 1.0f;
+          ent.assigned_building->built_percent += building_speed * dt;
+        }
+      }
       case TurtleState::IDLE: 
       {
         // fallthrough 
@@ -92,13 +110,26 @@ void check_collisions(std::vector<Entity>& entities) {
   for (auto& a : entities) {
     a.touching = BuildingType::NONE;
     for (auto& b : entities) {
-      if (CheckCollisionRecs(Rectangle{a.x, a.y, a.w, a.h}, Rectangle{b.x, b.y, b.w, b.h})) {
-        if (a.type == EntityType::TURTLE && b.type == EntityType::BATH) {
-          a.touching = BuildingType::BATH;
-        }
-        else if (a.type == EntityType::TURTLE && b.type == EntityType::STICK) 
+      if (CheckCollisionRecs(Rectangle{a.x, a.y, a.w, a.h}, Rectangle{b.x, b.y, b.w, b.h}))
+      {
+        if (a.type == EntityType::TURTLE)
         {
-          a.touching = BuildingType::STICK;
+          if (b.type == EntityType::BATH)
+          {
+            if (b.built_percent < 100)
+            {
+              a.touching = BuildingType::UN_BUILT_BATH;
+              a.assigned_building = &b;
+            }
+            else
+            {
+              a.touching = BuildingType::BUILT_BATH;
+            }
+          }
+          else if (b.type == EntityType::STICK) 
+          {
+            a.touching = BuildingType::STICK;
+          }
         }
       }
     }
@@ -119,6 +150,12 @@ void run_gameloop(App& app)
     if (IsKeyPressed(KEY_P)) {
       app.state = AppState::PAUSED;
       return;
+    }
+    if (IsKeyPressed(KEY_B)) {
+      app.world.current_action = ActionType::BUILD;
+    }
+    if (IsKeyPressed(KEY_M)) {
+      app.world.current_action = ActionType::MOVE;
     }
     
     static Vector2 target_pos = {

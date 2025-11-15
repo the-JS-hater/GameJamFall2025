@@ -12,6 +12,7 @@ enum struct TurtleState {
   PATHING,
   COLLECTING,
   BATHING,
+  BUILDING,
   DEAD,
 };
 
@@ -24,7 +25,8 @@ enum struct EntityType {
 
 enum struct BuildingType {
   NONE,
-  BATH,
+  UN_BUILT_BATH,
+  BUILT_BATH,
   STICK,
 };
 
@@ -37,6 +39,8 @@ struct Entity {
   float egg_timer;
   BuildingType touching;
   float moistness;
+  float built_percent;
+  Entity* assigned_building = nullptr;
 };
 
 enum struct TileType {
@@ -54,6 +58,11 @@ enum struct TileImage {
   RIVER_TOP_RIGHT,
 };
 
+enum struct ActionType {
+  MOVE,
+  BUILD,
+};
+
 struct World {
   float x,y,w,h;
   std::vector<Entity> entities;
@@ -63,7 +72,7 @@ struct World {
   std::map<std::pair<int, int>, TileImage> tileImages;
   int tileSize = 128;
   std::set<unsigned int> selected_turtles;
-  // NOTE: add additional game-level global data
+  ActionType current_action = ActionType::MOVE;
 };
 
 enum struct Scaling {
