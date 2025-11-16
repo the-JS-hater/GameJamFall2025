@@ -75,7 +75,7 @@ void process_turtle(Entity& ent, float const dt, App& app)
         ent.x += ent.dx;
         ent.y += ent.dy;
         
-        if (Vector2Distance(pos, ent.target) < 1) 
+        if (Vector2Distance(pos, ent.target) < 16.0f) 
         {
           find_next_state(app.world, ent);
         }

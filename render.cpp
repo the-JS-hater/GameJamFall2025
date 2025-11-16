@@ -3,6 +3,7 @@
 #include "math.h"
 #include <algorithm>
 #include <set>
+#include <string>
 
 #include "app.hpp"
 
@@ -287,7 +288,7 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
     
     float const icon_scale = 0.035f;
     int const font_size = 40;
-    int const offset = 1.2f * font_size;
+    int const offset = (int)(1.2f * font_size);
     int const pos_x = 15; 
     int pos_y = 15; 
     
@@ -299,7 +300,7 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
       icon_scale, 
       WHITE
     );
-    DrawText(water_str, pos_x + icon_scale * water_icon_tex.width, pos_y, font_size, RED);
+    DrawText(water_str, (int)(pos_x + icon_scale * water_icon_tex.width), pos_y, font_size, RED);
     pos_y += offset;
     
     // mushroom icon
@@ -310,7 +311,7 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
       icon_scale, 
       WHITE
     );
-    DrawText(mushroom_str, pos_x + icon_scale * shroom_icon_tex.width, pos_y, font_size, RED);
+    DrawText(mushroom_str, (int)(pos_x + icon_scale * shroom_icon_tex.width), pos_y, font_size, RED);
     pos_y += offset;
     
     // stick icon
@@ -321,7 +322,7 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
       icon_scale, 
       WHITE
     );
-    DrawText(stick_str, pos_x + icon_scale * stick_icon_tex.width, pos_y, font_size, RED);
+    DrawText(stick_str, (int)(pos_x + icon_scale * stick_icon_tex.width), pos_y, font_size, RED);
     pos_y += offset;
     
     // borgir icon
@@ -332,7 +333,7 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
       icon_scale, 
       WHITE
     );
-    DrawText(borgir_str, pos_x + icon_scale * borgir_icon_tex.width, pos_y, font_size, RED);
+    DrawText(borgir_str, (int)(pos_x + icon_scale * borgir_icon_tex.width), pos_y, font_size, RED);
     pos_y += offset;
   }
   EndTextureMode();
@@ -445,11 +446,11 @@ void render_turtle(Entity const& ent) {
       DrawTextureEx(default_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
       break;
   }
-  if (ent.hunger < 50) 
+  if (ent.hunger < 50.0f && ent.state != TurtleState::DEAD) 
   {
     DrawTextEx(
       GetFontDefault(), 
-      "!!!", 
+      std::string((size_t)(6.0 - ent.hunger / 10.0f), '!').c_str(), 
       { ent.x + (0.50f * ent.w), ent.y - 1.1f * text_offset}, 
       font_size * 3.0f, 
       spacing, 
@@ -486,11 +487,11 @@ void render_bath(Entity const& ent, float water_amount) {
         bathtub4_tex : bathtub3_tex;
   }
   Color color = ColorLerp_(GRAY, WHITE, ent.built_percent * (1.0f / 100.0f));
-  DrawTexture(tex, ent.x, ent.y, color);  
+  DrawTexture(tex, (int)ent.x, (int)ent.y, color);  
 }
 
 void render_stick(Entity const& ent) {
-  DrawTexture(stick_tex, ent.x, ent.y, WHITE);
+  DrawTexture(stick_tex, (int)ent.x, (int)ent.y, WHITE);
 }
 
 void render_donken(Entity const& ent) {
@@ -498,7 +499,7 @@ void render_donken(Entity const& ent) {
   Texture2D tex = ent.built_percent < 50.0f ?
                     donken_1_tex : ent.built_percent < 100.0f ?
                       donken_2_tex : donken_3_tex;
-  DrawTexture(tex, ent.x, ent.y, color);  
+  DrawTexture(tex, (int)ent.x, (int)ent.y, color);  
 }
 
 void render_mushroom(Entity const& ent) {
