@@ -69,7 +69,7 @@ void process_turtle(Entity& ent, float const dt, App& app)
         Vector2 pos = ent.get_center();
         Vector2 direction = Vector2Subtract(ent.target, pos);
         direction = Vector2Normalize(direction);
-        const float SPEED = app.world.tileSize;
+        const float SPEED = (float)app.world.tileSize;
         ent.dx = SPEED * dt * direction.x;
         ent.dy = SPEED * dt * direction.y;
         ent.x += ent.dx;
@@ -83,7 +83,7 @@ void process_turtle(Entity& ent, float const dt, App& app)
       }
       case TurtleState::COLLECTING: 
       {
-        float const collection_speed = 100.0f;
+        float const collection_speed = 1.0f;
         if (ent.touching == BuildingType::STICK)
         {
           app.world.stick_amount += dt * collection_speed;
@@ -118,7 +118,7 @@ void process_turtle(Entity& ent, float const dt, App& app)
           ent.state = TurtleState::IDLE;
         }
 
-        float const stick_drainage = 200.0f;
+        float const stick_drainage = 2.0f;
         if (app.world.stick_amount >= stick_drainage * dt)
         {
           app.world.stick_amount -= stick_drainage * dt;
@@ -353,7 +353,7 @@ void run_gameloop(App& app)
         }
         case EntityType::DONKEN:
         {
-          float const cooking_speed = 1.0f;
+          float const cooking_speed = 10.0f;
           float const mushroom_depletion_speed = 10.0f;
           if (ent.built_percent >= 100.0f && app.world.mushroom_amount > mushroom_depletion_speed * dt)
           {
