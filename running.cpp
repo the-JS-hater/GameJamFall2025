@@ -25,8 +25,8 @@ void find_next_state(World& world, Entity& ent) {
   }
   else if (world.tiles[world_to_tile_pos(world, ent.x, ent.y)] == TileType::SAND && ent.hunger > 50.0f)
   {
-    spawn_egg(world, ent.x, ent.y);
     ent.hunger -= 20.0f;
+    spawn_egg(world, ent.x, ent.y, ent.moistness, ent.hunger);
   }
   else if (world.tiles[world_to_tile_pos(world, ent.x, ent.y)] == TileType::RIVER
             || ent.touching == BuildingType::STICK
@@ -43,24 +43,18 @@ void find_next_state(World& world, Entity& ent) {
 void process_turtle(Entity& ent, float const dt, App& app) 
 {
   // Change the turtle stats like moistness and hunger
-  {
-    if (
-      (ent.moistness < 0.0f || ent.hunger < 0.0f) && 
-      ent.state != TurtleState::DEAD
-    ) 
-    {
-      if (ent.moistness < 0.0f && ent.state != TurtleState::DEAD) {
-        ent.state = TurtleState::DEAD;
-        return;
-      }
-      float const moistness_depletion_rate = 0.3f;
-      float const hunger_depletion_rate = 0.3f;
-      ent.moistness -= dt * moistness_depletion_rate;
-      ent.hunger -= dt * hunger_depletion_rate;
-    }
+  if (ent.moistness < 0.0f || ent.hunger < 0.0f) {
+    ent.state = TurtleState::DEAD;
+  }
+  if (ent.state != TurtleState::DEAD) {
+    float const moistness_depletion_rate = 0.3f;
+    float const hunger_depletion_rate = 0.3f;
+    ent.moistness -= dt * moistness_depletion_rate;
+    ent.hunger -= dt * hunger_depletion_rate;
   }
 
   // Start ideling if turtle is far away from target
+  if (ent.state != TurtleState::DEAD)
   {
     if (ent.state != TurtleState::PATHING && Vector2Distance(ent.get_center(), ent.target) > app.world.tileSize)
     {
@@ -89,7 +83,7 @@ void process_turtle(Entity& ent, float const dt, App& app)
       }
       case TurtleState::COLLECTING: 
       {
-        float const collection_speed = 1.0f;
+        float const collection_speed = 4.0f;
         if (ent.touching == BuildingType::STICK)
         {
           app.world.stick_amount += dt * collection_speed;
@@ -146,9 +140,12 @@ void process_turtle(Entity& ent, float const dt, App& app)
       case TurtleState::DEAD:
         ent.dead_time += dt * 1.0f;
         if (ent.dead_time > 15.0f) ent.to_be_removed = true;
+        break;
       case TurtleState::IDLE: 
+        break;
       default: 
         TraceLog(LOG_INFO, "UNKNOWN TURTLE STATE");
+        break;
     }
   }
 }
@@ -471,7 +468,9 @@ void set_initial_entities(World& world)
     spawn_egg(
       world,
       (float)GetRandomValue(0, (int)world.w),
-      (float)GetRandomValue(0, (int)world.h)
+      (float)GetRandomValue(0, (int)world.h),
+      (float)GetRandomValue(50, 100),
+      (float)GetRandomValue(50, 100)
     );
   }
 }

@@ -20,10 +20,10 @@ void spawn_turtle(World& world, float x, float y)
   world.entities.push_back(new_ent);
 }
 
-void spawn_egg(World& world, float x, float y)
+void spawn_egg(World& world, float x, float y, float moistness, float hunger)
 {
   float const egg_size = world.tileSize;
-  float const egg_timer = 5.0f;
+  float const egg_timer = (float)GetRandomValue(3, 20);
   Entity new_ent { };
   new_ent.id = world.next_id++;
   new_ent.type = EntityType::EGG; 
@@ -34,6 +34,8 @@ void spawn_egg(World& world, float x, float y)
   new_ent.dx = 0.0f;
   new_ent.dy = 0.0f;
   new_ent.egg_timer = egg_timer;
+  new_ent.hunger = hunger;
+  new_ent.moistness = moistness;
   world.entities.push_back(new_ent);
 }
 

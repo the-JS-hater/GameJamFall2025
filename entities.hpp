@@ -106,7 +106,7 @@ struct World {
 
 
 void spawn_turtle(World&, float, float);
-void spawn_egg(World&, float, float);
+void spawn_egg(World&, float, float, float, float);
 void create_stick(World&, float, float);
 void create_sticks_and_mushrooms(World&);
 void create_donken(World&, float, float);
