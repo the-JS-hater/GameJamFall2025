@@ -5,7 +5,6 @@
 #include <vector>
 #include <array>
 #include <map>
-#include <iostream>
 
 
 App init_application()
@@ -75,6 +74,9 @@ TileImage get_river_bend_from_neighbors(std::vector<bool> const& neighbors) {
   } else if (neighbors == std::vector<bool>{true, false, true, false}) {
     return TileImage::RIVER_HORIZONTAL;
   } else if (neighbors == std::vector<bool>{false, true, false, true}) {
+    return TileImage::RIVER_VERTICAL;
+  } else {
+    TraceLog(LOG_WARNING, "SHOULD NOT REACH THIS PART OF A RIVER!");
     return TileImage::RIVER_VERTICAL;
   }
 }

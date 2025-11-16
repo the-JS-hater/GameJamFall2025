@@ -1,7 +1,6 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "math.h"
-#include "stdio.h"
 #include <algorithm>
 #include <set>
 
@@ -85,7 +84,6 @@ void process_turtle(Entity& ent, float const dt, App& app)
       case TurtleState::COLLECTING: 
       {
         float const collection_speed = 100.0f;
-        Vector2 pos = Vector2{ent.x, ent.y};
         if (ent.touching == BuildingType::STICK)
         {
           app.world.stick_amount += dt * collection_speed;
@@ -127,6 +125,7 @@ void process_turtle(Entity& ent, float const dt, App& app)
           float const building_speed = 1.0f;
           ent.assigned_building->built_percent += building_speed * dt;
         }
+        break;
       }
       case TurtleState::EATING:
       {
@@ -136,15 +135,11 @@ void process_turtle(Entity& ent, float const dt, App& app)
           app.world.burger_amount -= eat_speed * dt;
           ent.hunger += eat_speed * dt;
         }
+        break;
       }
       case TurtleState::IDLE: 
-      {
-        // fallthrough 
-      }
       default: 
-      {
-        // empty
-      }
+        TraceLog(LOG_INFO, "UNKNOWN TURTLE STATE");
     }
   }
 }
@@ -365,6 +360,7 @@ void run_gameloop(App& app)
             app.world.burger_amount += cooking_speed * dt;
             app.world.mushroom_amount -= mushroom_depletion_speed * dt;
           }
+          break;
         }
         default: 
         { 
@@ -436,8 +432,7 @@ void run_gameover(App& app)
     
     // === RENDERING ===
     
-    //TODO: change render-call
-    render_start_menu(app.render_target);
+    render_gameover(app.render_target);
     render_to_screen(app, {0,0,0,0});
   }
 }
@@ -449,13 +444,13 @@ void set_initial_entities(World& world)
   {
     spawn_turtle(
       world,
-      (float)GetRandomValue(0, world.w),
-      (float)GetRandomValue(0, world.h)
+      (float)GetRandomValue(0, (int)world.w),
+      (float)GetRandomValue(0, (int)world.h)
     );
     spawn_egg(
       world,
-      (float)GetRandomValue(0, world.w),
-      (float)GetRandomValue(0, world.h)
+      (float)GetRandomValue(0, (int)world.w),
+      (float)GetRandomValue(0, (int)world.h)
     );
   }
 }
