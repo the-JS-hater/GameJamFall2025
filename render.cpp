@@ -307,6 +307,77 @@ void render_to_screen(App& app, Rectangle selection)
   EndDrawing();
 }
 
+void render_turtle(Entity const& ent) {
+  static float const text_offset = 20.0f;
+  static float const font_size = 10.0f;
+  static float const spacing = 2.0f;
+      
+  Texture2D default_turtle_tex =
+    ent.id % 3 ?
+      turtle_tex : ent.id % 7 ?
+        turtle2_tex : turtle3_tex;
+  switch (ent.state) 
+  {
+    case TurtleState::DEAD: 
+      DrawTextureEx(dead_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+      break;
+    case TurtleState::PATHING:
+      DrawTextureEx(default_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+      break;
+    case TurtleState::IDLE:
+    {
+      DrawTextEx(GetFontDefault(), "thinking...", { ent.x + (0.25f * ent.w), ent.y - text_offset}, font_size, spacing, WHITE);
+      DrawTextureEx(default_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+      break;
+    }
+    case TurtleState::BATHING:
+      DrawTextEx(GetFontDefault(), "~.~ ohhh", { ent.x + (0.25f * ent.w), ent.y - text_offset}, font_size, spacing, WHITE);
+      DrawTextureEx(default_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+      break;
+    case TurtleState::COLLECTING:
+    case TurtleState::BUILDING:
+      DrawTextEx(GetFontDefault(), "Working hard >.<", { ent.x + (0.25f * ent.w), ent.y - text_offset}, font_size, spacing, WHITE);
+      DrawTextureEx(default_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+      break;
+    case TurtleState::EATING:
+      DrawTextEx(GetFontDefault(), "mmm... borgirs", { ent.x + (0.25f * ent.w), ent.y - text_offset}, font_size, spacing, WHITE);
+      DrawTextureEx(default_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+      break;
+  }
+}
+
+Color ColorLerp_(Color col1, Color col2, float t) {
+  float tp = 1.0f - t;
+  return Color{
+    (unsigned char)(col2.r * t + col1.r * tp),
+    (unsigned char)(col2.g * t + col1.g * tp),
+    (unsigned char)(col2.b * t + col1.b * tp),
+    (unsigned char)(col2.a * t + col1.a * tp),
+  };
+}
+
+void render_egg(Entity const& ent) {
+  DrawTextureEx(egg_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
+}
+
+void render_bath(Entity const& ent, float water_amount) {
+  Texture2D tex = water_amount > 6000.0f ?
+    bathtub3_tex : water_amount > 2000.0f ?
+      bathtub2_tex : bathtub1_tex;
+  float scale = 0.2 + ent.built_percent * (0.8 / 100);
+  DrawTextureEx(tex, { ent.x, ent.y }, 1.0f /*rotation*/, scale, WHITE);  
+}
+
+void render_stick(Entity const& ent) {
+  DrawTexture(stick_tex, ent.x, ent.y, WHITE);
+}
+
+void render_donken(Entity const& ent) {
+  float scale = 0.2 + ent.built_percent * (0.8 / 100);
+  Color color = ColorLerp_(GRAY, WHITE, ent.built_percent * (1.0f / 100.0f));
+  DrawTextureEx(donken_tex, { ent.x, ent.y }, 0.0f /*rotation*/, scale, color);  
+}
+
 void render_entities(App& app, std::set<unsigned int> const& selected_turtles) 
 { 
   std::sort(
@@ -322,66 +393,20 @@ void render_entities(App& app, std::set<unsigned int> const& selected_turtles)
     switch (ent.type)
     {
       case EntityType::TURTLE:
-      {
-        static float const text_offset = 20.0f;
-        static float const font_size = 10.0f;
-        static float const spacing = 2.0f;
-            
-        Texture2D defualt_turtle_tex =
-          ent.id % 3 ?
-            turtle_tex : ent.id % 7 ?
-              turtle2_tex : turtle3_tex;
-        switch (ent.state) 
-        {
-          case TurtleState::DEAD: 
-            DrawTextureEx(dead_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
-            break;
-          case TurtleState::PATHING:
-            DrawTextureEx(defualt_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
-            break;
-          case TurtleState::IDLE:
-          {
-            DrawTextEx(GetFontDefault(), "thinking...", { ent.x + (0.25f * ent.w), ent.y - text_offset}, font_size, spacing, WHITE);
-            DrawTextureEx(defualt_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
-            break;
-          }
-          case TurtleState::BATHING:
-            DrawTextEx(GetFontDefault(), "~.~ ohhh", { ent.x + (0.25f * ent.w), ent.y - text_offset}, font_size, spacing, WHITE);
-            DrawTextureEx(defualt_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
-            break;
-          case TurtleState::COLLECTING:
-          case TurtleState::BUILDING:
-            DrawTextEx(GetFontDefault(), "Working hard >.<", { ent.x + (0.25f * ent.w), ent.y - text_offset}, font_size, spacing, WHITE);
-            DrawTextureEx(defualt_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
-            break;
-          case TurtleState::EATING:
-            DrawTextEx(GetFontDefault(), "mmm... borgirs", { ent.x + (0.25f * ent.w), ent.y - text_offset}, font_size, spacing, WHITE);
-            DrawTextureEx(defualt_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
-            break;
-        }
+        render_turtle(ent);
         break;
-      }
       case EntityType::EGG:
-        DrawTextureEx(egg_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);  
+        render_egg(ent);
         break;
       case EntityType::BATH:
-      {
-        Texture2D tex = app.world.waterAmount > 6000.0f ?
-          bathtub3_tex : app.world.waterAmount > 2000.0f ?
-            bathtub2_tex : bathtub1_tex;
-        float scale = 0.2 + ent.built_percent * (0.8 / 100);
-        DrawTextureEx(tex, { ent.x, ent.y }, 1.0f /*rotation*/, scale, WHITE);  
+        render_bath(ent, app.world.waterAmount);
         break;
-      }
       case EntityType::STICK:
-        DrawTexture(stick_tex, ent.x, ent.y, WHITE);
+        render_stick(ent);
         break;
       case EntityType::DONKEN:
-      {
-        float scale = 0.2 + ent.built_percent * (0.8 / 100);
-        Color color = WHITE;
-        DrawTextureEx(donken_tex, { ent.x, ent.y }, 0.0f /*rotation*/, scale, color);  
-      }
+        render_donken(ent);
+        break;
     }
   }
 }
