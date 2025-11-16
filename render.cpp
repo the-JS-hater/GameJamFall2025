@@ -39,6 +39,7 @@ Texture2D donken_1_tex;
 Texture2D donken_2_tex;
 Texture2D donken_3_tex;
 Texture2D bush_tex;
+Texture2D bush2_tex;
 Texture2D gameover_screen_tex;
 
 
@@ -132,12 +133,10 @@ void init_resources(App const& app)
   ImageResize(&sopp_image, size, size);
 
   int small_size = (int)(0.33 * (float)size);
+  int bush_size = small_size * 2;
   ImageResize(&rock_image, small_size, small_size);
-  ImageResize(
-    &bush_image, 
-    (int)((float)small_size * 2.0f), 
-    (int)((float)small_size * 2.0f)
-  );
+  ImageResize(&bush_image, bush_size, bush_size);
+  bush2_tex = scale(LoadTexture("resources/Bush2.png"), bush_size, bush_size);
   int big_size = 2 * size;
   ImageResize(&bathtub1_image, big_size, big_size);
   ImageResize(&bathtub2_image, big_size, big_size);
@@ -252,6 +251,9 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
         switch (GetRandomValue(0, 20)) {
           case 1:
             DrawTextureEx(bush_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+            break;
+          case 2:
+            DrawTextureEx(bush2_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
             break;
           case 4:
             DrawTextureEx(rock_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
