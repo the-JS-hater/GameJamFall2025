@@ -24,6 +24,11 @@ void find_next_state(World& world, Entity& ent) {
   {
     ent.state = TurtleState::EATING;
   }
+  else if (world.tiles[world_to_tile_pos(world, ent.x, ent.y)] == TileType::SAND && ent.hunger > 50.0f)
+  {
+    spawn_egg(world, ent.x, ent.y);
+    ent.hunger -= 20.0f;
+  }
   else if (world.tiles[world_to_tile_pos(world, ent.x, ent.y)] == TileType::RIVER
             || ent.touching == BuildingType::STICK
             || ent.touching == BuildingType::MUSHROOM)
@@ -189,12 +194,15 @@ void check_collisions(std::vector<Entity>& entities) {
           {
             a.touching = BuildingType::MUSHROOM;
           }
-          else if (b.type == EntityType::TURTLE)
-          {
-            const float push_strength = 10.0f;
-            Vector2 push_dir = Vector2Subtract(a.get_center(), b.get_center());
-            a.push_force += Vector2Scale(Vector2Normalize(push_dir), push_strength / Vector2Length(push_dir));
-          }
+        }
+        if ((a.type == EntityType::TURTLE || a.type == EntityType::EGG)
+             && (b.type == EntityType::TURTLE || b.type == EntityType::EGG)
+             && a.id != b.id)
+        {
+          const float push_strength = 10.0f;
+          Vector2 push_dir = Vector2Subtract(a.get_center(), b.get_center());
+          float push = push_strength / std::max(Vector2Length(push_dir), 1.0f);
+          a.push_force += Vector2Scale(Vector2Normalize(push_dir), push);
         }
       }
     }
@@ -344,7 +352,7 @@ void run_gameloop(App& app)
           {
             ent.type = EntityType::TURTLE;
             ent.moistness = 100.0f;
-            ent.hunger = 100.0f;
+            ent.hunger = 50.0f;
           }
           break;
         }
