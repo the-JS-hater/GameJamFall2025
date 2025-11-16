@@ -68,6 +68,10 @@ void process_turtle(Entity& ent, float const dt, App& app)
       }
       case TurtleState::COLLECTING: 
       {
+        if (Vector2Distance(ent.get_center(), ent.target) > app.world.tileSize)
+        {
+          ent.state = TurtleState::IDLE;
+        }
         float const collection_speed = 100.0f;
         Vector2 pos = Vector2{ent.x, ent.y};
         if (ent.touching == BuildingType::STICK)
@@ -180,7 +184,7 @@ void check_collisions(std::vector<Entity>& entities) {
           }
           else if (b.type == EntityType::TURTLE)
           {
-            const float push_strength = 1.0f;
+            const float push_strength = 10.0f;
             Vector2 push_dir = Vector2Subtract(a.get_center(), b.get_center());
             a.push_force += Vector2Scale(Vector2Normalize(push_dir), push_strength / Vector2Length(push_dir));
           }
