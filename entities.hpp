@@ -68,6 +68,10 @@ enum struct TileType {
 
 enum struct TileImage {
   GRASS,
+  GRASS_SAND_1,
+  GRASS_SAND_2,
+  GRASS_SAND_3,
+  GRASS_SAND_4,
   SAND,
   RIVER_HORIZONTAL,
   RIVER_VERTICAL,

@@ -216,6 +216,18 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
         case TileImage::SAND:
           tex = &sand_tex;
           break;
+        case TileImage::GRASS_SAND_1:
+          tex = &grass_sand_1_tex;
+          break;
+        case TileImage::GRASS_SAND_2:
+          tex = &grass_sand_2_tex;
+          break;
+        case TileImage::GRASS_SAND_3:
+          tex = &grass_sand_3_tex;
+          break;
+        case TileImage::GRASS_SAND_4:
+          tex = &grass_sand_4_tex;
+          break;
         }
       }
       Vector2 vec_pos = { (float)x * app.world.tileSize, (float)y * app.world.tileSize };

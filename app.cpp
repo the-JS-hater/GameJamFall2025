@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <array>
+#include <map>
 #include <iostream>
 
 
@@ -78,11 +79,6 @@ TileImage get_river_bend_from_neighbors(std::vector<bool> const& neighbors) {
   }
 }
 
-void add_sand(World& world, std::pair<int, int> const& position) {
-  world.tiles[position] = TileType::SAND;
-  world.tileImages[position] = TileImage::SAND;
-}
-
 void generate_river_images(World& world, std::pair<int, int> const& start) {
   // use dfs to fill in the river images
   std::vector<std::pair<int, int>> queue = {start};
@@ -102,18 +98,29 @@ void generate_river_images(World& world, std::pair<int, int> const& start) {
           visited.insert(neighbour);
         }
       } else {
-        add_sand(world, neighbour);
         neighbors.push_back(false);
       }
     }
     world.tileImages[current] = get_river_bend_from_neighbors(neighbors);
-    // add sand to diagonals:
-    static std::array<std::pair<int, int>, 4> diagonal_offsets = {std::make_pair(1, -1), std::make_pair(-1, -1), std::make_pair(-1, 1), std::make_pair(1, 1)};
-    for (int i = 0; i < 4; ++i) {
-      auto offset = diagonal_offsets[i];
-      auto neighbour = std::make_pair(current.first + offset.first, current.second + offset.second);
-      if (world.tiles[neighbour] != TileType::RIVER) {
-        add_sand(world, neighbour);
+  }
+}
+
+void generate_sand_images(World& world) {
+  for (auto water : world.tiles) {
+    if (water.second != TileType::RIVER) {
+      continue;
+    }
+    auto position = water.first;
+    static TileImage sands[6] = {TileImage::SAND, TileImage::SAND, TileImage::GRASS_SAND_4, TileImage::GRASS_SAND_3, TileImage::GRASS_SAND_2, TileImage::GRASS_SAND_1};
+    static std::map<TileImage, int> tile_image_to_sand_strength = {{TileImage::SAND, 1}, {TileImage::GRASS_SAND_4, 2}, {TileImage::GRASS_SAND_3, 3}, {TileImage::GRASS_SAND_2, 4}, {TileImage::GRASS_SAND_1, 5}};
+    for (int y = -5; y <= 5; ++y) {
+      for (int x = -5; x <= 5; ++x) {
+        auto neighbour = std::make_pair(position.first + x, position.second + y);
+        int sand_strength = std::max(std::abs(x), std::abs(y));
+        if (world.tiles[neighbour] != TileType::RIVER && (world.tiles[neighbour] != TileType::SAND || tile_image_to_sand_strength[world.tileImages[neighbour]] > sand_strength)) {
+          world.tiles[neighbour] = TileType::SAND;
+          world.tileImages[neighbour] = sands[std::max(std::abs(x), std::abs(y))];
+        }
       }
     }
   }
@@ -135,6 +142,7 @@ World init_world()
   start = std::make_pair(1, 0);
   generateRiver(world, start, 1, 100);
   generate_river_images(world, std::make_pair(0, 0));
+  generate_sand_images(world);
   
   return world;
 }
