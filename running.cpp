@@ -224,6 +224,10 @@ void run_gameloop(App& app)
       app.state = AppState::EXIT;
       return;
     }
+    if (IsKeyPressed(KEY_T)) {
+      app.state = AppState::TURTORIAL;
+      break;
+    }
     if (IsKeyPressed(KEY_B)) {
       app.world.current_action = ActionType::BUILD_BATH;
     }
@@ -454,6 +458,28 @@ void run_gameover(App& app)
     // === RENDERING ===
     
     render_gameover(app.render_target);
+    render_to_screen(app, {0,0,0,0});
+  }
+}
+
+void run_tutorial(App& app)
+{
+  while (app.state == AppState::TURTORIAL)
+  {
+    // === INPUT ===
+    
+    if (IsKeyPressed(KEY_ESCAPE)) {
+      app.state = AppState::EXIT;
+      return;
+    }
+    if (IsKeyPressed(KEY_SPACE)) {
+      app.state = AppState::GAMELOOP;
+      return;
+    }
+    
+    // === RENDERING ===
+    
+    render_help(app.render_target);
     render_to_screen(app, {0,0,0,0});
   }
 }

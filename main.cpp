@@ -33,6 +33,9 @@ int main()
       case AppState::GAMEOVER:
         run_gameover(app);
         break;
+      case AppState::TURTORIAL:
+        run_tutorial(app);
+        break;
       case AppState::EXIT: 
         goto exit_app;
     }
