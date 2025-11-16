@@ -197,9 +197,6 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
           case 4:
             DrawTextureEx(rock_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
             break;
-          case 5:
-            DrawTextureEx(stick_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
-            break;
           default:
             break;
         }
