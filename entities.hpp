@@ -17,12 +17,19 @@ enum struct TurtleState {
   DEAD,
 };
 
+enum struct MushroomType {
+  TOADSTOOL,
+  CHANTERELLE,
+  BOLETUS,
+};
+
 enum struct EntityType {
   TURTLE,
   EGG,
   BATH,
   DONKEN,
   STICK,
+  MUSHROOM,
 };
 
 enum struct BuildingType {
@@ -47,6 +54,7 @@ struct Entity {
   float built_percent;
   Entity* assigned_building = nullptr;
   Vector2 push_force = Vector2{0.0f, 0.0f};
+  MushroomType mushroom_type;
 
   Vector2 get_center();
 };
@@ -92,5 +100,6 @@ struct World {
 void spawn_turtle(World&, float, float);
 void spawn_egg(World&, float, float);
 void create_stick(World&, float, float);
-void create_sticks(World&);
+void create_sticks_and_mushrooms(World&);
 void create_donken(World&, float, float);
+void create_mushroom(World&, float, float);

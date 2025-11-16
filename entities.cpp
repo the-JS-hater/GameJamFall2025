@@ -48,11 +48,17 @@ void create_stick(World& world, float x, float y) {
   world.entities.push_back(stick);
 }
 
-void create_sticks(World& world) {
+void create_sticks_and_mushrooms(World& world) {
   for (int y = -30; y < 30; ++y) {
     for (int x = -30; x < 30; ++x) {
       if (GetRandomValue(0, 10) == 0 && world.tiles.find(std::make_pair(x, y)) == world.tiles.end()) {
-        create_stick(world, x * world.tileSize, y * world.tileSize);
+        if (GetRandomValue(0, 1)) {
+          create_stick(world, x * world.tileSize, y * world.tileSize);
+        }
+        else
+        {
+          create_mushroom(world, x * world.tileSize, y * world.tileSize);
+        }
       }
     }
   }
@@ -68,6 +74,22 @@ void create_donken(World& world, float x, float y) {
   donken.h = world.tileSize;
   donken.built_percent = 0.0f;
   world.entities.push_back(donken);
+}
+
+void create_mushroom(World& world, float x, float y) {
+  Entity mushroom;
+  mushroom.id = world.next_id++;
+  mushroom.type = EntityType::MUSHROOM;
+  switch (GetRandomValue(0, 2)) {
+    case 0: mushroom.mushroom_type = MushroomType::BOLETUS; break;
+    case 1: mushroom.mushroom_type = MushroomType::CHANTERELLE; break;
+    case 2: mushroom.mushroom_type = MushroomType::TOADSTOOL; break;
+  }
+  mushroom.x = x;
+  mushroom.y = y;
+  mushroom.w = world.tileSize;
+  mushroom.h = world.tileSize;
+  world.entities.push_back(mushroom);
 }
 
 Vector2 Entity::get_center() {

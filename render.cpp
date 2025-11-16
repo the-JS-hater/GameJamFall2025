@@ -93,11 +93,11 @@ void init_resources(App const& app)
   ImageResize(&sand_image, size, size);
   ImageResize(&egg_image, size, size);
   ImageResize(&stick_image, size, size);
+  ImageResize(&flugsvamp_image, size, size);
+  ImageResize(&kantarell_image, size, size);
+  ImageResize(&sopp_image, size, size);
 
   int small_size = 0.33 * size;
-  ImageResize(&flugsvamp_image, small_size, small_size);
-  ImageResize(&kantarell_image, small_size, small_size);
-  ImageResize(&sopp_image, small_size, small_size);
   ImageResize(&rock_image, small_size, small_size);
 
   int big_size = 2 * size;
@@ -185,15 +185,6 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
       {
         SetRandomSeed(x + y * 1000);
         switch (GetRandomValue(0, 20)) {
-          case 1:
-            DrawTextureEx(flugsvamp_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
-            break;
-          case 2:
-            DrawTextureEx(kantarell_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
-            break;
-          case 3:
-            DrawTextureEx(sopp_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
-            break;
           case 4:
             DrawTextureEx(rock_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
             break;
@@ -380,6 +371,34 @@ void render_donken(Entity const& ent) {
   DrawTextureEx(donken_tex, { ent.x, ent.y }, 0.0f /*rotation*/, scale, color);  
 }
 
+void render_mushroom(Entity const& ent) {
+  Texture2D tex;
+  switch (ent.mushroom_type) {
+    case MushroomType::BOLETUS:
+    {
+      tex = sopp_tex;
+      break;
+    }
+    case MushroomType::CHANTERELLE:
+    {
+      tex = kantarell_tex;
+      break;
+    }
+    case MushroomType::TOADSTOOL:
+    {
+      tex = flugsvamp_tex;
+      break;
+    }
+    default:
+    {
+      TraceLog(LOG_WARNING, "tried to render entity with type mushroom but no valid mushroom type");
+      tex = kantarell_tex;
+      break;
+    }
+  }
+  DrawTexture(tex, ent.x, ent.y, WHITE);  
+}
+
 void render_entities(App& app, std::set<unsigned int> const& selected_turtles) 
 { 
   std::sort(
@@ -408,6 +427,9 @@ void render_entities(App& app, std::set<unsigned int> const& selected_turtles)
         break;
       case EntityType::DONKEN:
         render_donken(ent);
+        break;
+      case EntityType::MUSHROOM:
+        render_mushroom(ent);
         break;
     }
   }

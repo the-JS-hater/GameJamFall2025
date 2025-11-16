@@ -32,7 +32,7 @@ int main()
     }
     create_bath(app.world, 400, 400);
   }
-  create_sticks(app.world);
+  create_sticks_and_mushrooms(app.world);
   setup_controls(app.input_map);
   init_resources(app);
   
