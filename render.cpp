@@ -307,15 +307,19 @@ void render_to_screen(App& app, Rectangle selection)
   EndDrawing();
 }
 
+Texture2D& pick_turtle_texture(Entity const& ent) {
+  return ent.moistness < 20.0f ?
+      turtle_tex : ent.moistness < 50.0f ?
+        turtle2_tex : turtle3_tex;
+}
+
 void render_turtle(Entity const& ent) {
   static float const text_offset = 20.0f;
   static float const font_size = 10.0f;
   static float const spacing = 2.0f;
+
+  Texture2D default_turtle_tex = pick_turtle_texture(ent); 
       
-  Texture2D default_turtle_tex =
-    ent.id % 3 ?
-      turtle_tex : ent.id % 7 ?
-        turtle2_tex : turtle3_tex;
   switch (ent.state) 
   {
     case TurtleState::DEAD: 
