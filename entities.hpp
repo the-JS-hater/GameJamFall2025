@@ -39,6 +39,7 @@ enum struct BuildingType {
   UN_BUILT_DONKEN,
   BUILT_DONKEN,
   STICK,
+  MUSHROOM,
 };
 
 struct Entity {
@@ -88,6 +89,7 @@ struct World {
   float waterAmount = 0.0f;
   float stick_amount = 0.0f;
   float burger_amount = 0.0f;
+  float mushroom_amount = 0.0f;
   std::map<std::pair<int, int>, TileType> tiles;
   std::map<std::pair<int, int>, TileImage> tileImages;
   int tileSize = 128;

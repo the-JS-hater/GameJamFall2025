@@ -25,7 +25,8 @@ void find_next_state(World& world, Entity& ent) {
     ent.state = TurtleState::EATING;
   }
   else if (world.tiles[world_to_tile_pos(world, ent.x, ent.y)] == TileType::RIVER
-            || ent.touching == BuildingType::STICK)
+            || ent.touching == BuildingType::STICK
+            || ent.touching == BuildingType::MUSHROOM)
   {
     ent.state = TurtleState::COLLECTING;
   }
@@ -69,6 +70,10 @@ void process_turtle(Entity& ent, float const dt, App& app)
         if (ent.touching == BuildingType::STICK)
         {
           app.world.stick_amount += dt * collection_speed;
+        }
+        else if (ent.touching == BuildingType::MUSHROOM)
+        {
+          app.world.mushroom_amount += dt * collection_speed;
         }
         else if (app.world.tiles[world_to_tile_pos(app.world, ent.x, ent.y)] == TileType::RIVER)
         {
@@ -165,6 +170,10 @@ void check_collisions(std::vector<Entity>& entities) {
           else if (b.type == EntityType::STICK) 
           {
             a.touching = BuildingType::STICK;
+          }
+          else if (b.type == EntityType::MUSHROOM)
+          {
+            a.touching = BuildingType::MUSHROOM;
           }
           else if (b.type == EntityType::TURTLE)
           {

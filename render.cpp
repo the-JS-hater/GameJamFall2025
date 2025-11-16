@@ -272,13 +272,15 @@ void render_to_screen(App& app, Rectangle selection)
     
     char const *resolution_printout = 
       TextFormat(
-        "Resolution %d x %d, %s\nFPS: %d\nWater: %.0f\nSticks: %.0f", 
+        "Resolution %d x %d, %s\nFPS: %d\nWater: %.0f\nSticks: %.0f\nMushrooms: %.0f\nBurgers: %.0f", 
         (int)res_w, 
         (int)res_h, 
         scaling, 
         GetFPS(),
         app.world.waterAmount,
-        app.world.stick_amount
+        app.world.stick_amount,
+        app.world.mushroom_amount,
+        app.world.burger_amount
       );
     DrawText(resolution_printout, 10, 10, 20, RED);
   }
