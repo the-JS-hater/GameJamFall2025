@@ -56,6 +56,8 @@ struct Entity {
   Entity* assigned_building = nullptr;
   Vector2 push_force = Vector2{0.0f, 0.0f};
   MushroomType mushroom_type;
+  float dead_time;
+  bool to_be_removed = false;
 
   Vector2 get_center();
 };

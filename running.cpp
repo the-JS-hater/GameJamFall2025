@@ -44,14 +44,20 @@ void process_turtle(Entity& ent, float const dt, App& app)
 {
   // Change the turtle stats like moistness and hunger
   {
-    if (ent.moistness < 0.0f || ent.hunger < 0.0f) {
-      ent.state = TurtleState::DEAD;
-      return;
+    if (
+      (ent.moistness < 0.0f || ent.hunger < 0.0f) && 
+      ent.state != TurtleState::DEAD
+    ) 
+    {
+      if (ent.moistness < 0.0f && ent.state != TurtleState::DEAD) {
+        ent.state = TurtleState::DEAD;
+        return;
+      }
+      float const moistness_depletion_rate = 0.3f;
+      float const hunger_depletion_rate = 0.3f;
+      ent.moistness -= dt * moistness_depletion_rate;
+      ent.hunger -= dt * hunger_depletion_rate;
     }
-    float const moistness_depletion_rate = 0.3f;
-    float const hunger_depletion_rate = 0.3f;
-    ent.moistness -= dt * moistness_depletion_rate;
-    ent.hunger -= dt * hunger_depletion_rate;
   }
 
   // Start ideling if turtle is far away from target
@@ -137,6 +143,9 @@ void process_turtle(Entity& ent, float const dt, App& app)
         }
         break;
       }
+      case TurtleState::DEAD:
+        ent.dead_time += dt * 1.0f;
+        if (ent.dead_time > 15.0f) ent.to_be_removed = true;
       case TurtleState::IDLE: 
       default: 
         TraceLog(LOG_INFO, "UNKNOWN TURTLE STATE");
@@ -305,6 +314,18 @@ void run_gameloop(App& app)
       app.world.current_action = ActionType::DEFAULT;
     }
       
+    // remove 15sec+ old corpses
+    app.world.entities.erase(
+      std::remove_if(
+        app.world.entities.begin(), 
+        app.world.entities.end(),
+        [](Entity ent) { 
+          return ent.to_be_removed;
+        }
+      ),
+      app.world.entities.end()
+    );
+
     unsigned int alive_count = 0;
     for (Entity& ent : app.world.entities) 
     {
