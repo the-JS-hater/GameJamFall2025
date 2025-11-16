@@ -41,7 +41,10 @@ Texture2D donken_3_tex;
 Texture2D bush_tex;
 Texture2D bush2_tex;
 Texture2D gameover_screen_tex;
-
+Texture2D water_icon_tex;
+Texture2D stick_icon_tex;
+Texture2D borgir_icon_tex;
+Texture2D shroom_icon_tex;
 
 Texture2D scale(Texture2D tex, int width, int height) {
   Image im = LoadImageFromTexture(tex);
@@ -189,6 +192,16 @@ void init_resources(App const& app)
   
   gameover_screen_tex = LoadTexture("resources/Gameover_Screen.png");
   scale(gameover_screen_tex, 1920u, 1080u);
+
+  int const icon_scale = 16u;
+  water_icon_tex  = LoadTexture("resources/Water_Icon.png");   
+  scale(water_icon_tex, icon_scale, icon_scale);
+  stick_icon_tex = LoadTexture("resources/Stick_Icon_.png");
+  scale(stick_icon_tex, icon_scale, icon_scale);
+  borgir_icon_tex = LoadTexture("resources/Burger_Icon.png");
+  scale(borgir_icon_tex, icon_scale, icon_scale);
+  shroom_icon_tex = LoadTexture("resources/Shroom_Icon.png");
+  scale(shroom_icon_tex, icon_scale, icon_scale);
 }
 
 void render_scene(App& app, std::set<unsigned int> const& selected_turtles) 
@@ -267,58 +280,59 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
   render_entities(app, selected_turtles);
   EndMode2D();
   { // === HUD/GUI ===
-    char const *water_str= TextFormat("%.0f", app.world.waterAmount);
-    char const *stick_str= TextFormat("%.0f", app.world.stick_amount);
-    char const *mushroom_str= TextFormat("%.0f", app.world.mushroom_amount);
-    char const *borgir_str= TextFormat("%.0f", app.world.burger_amount);
+    char const *water_str= TextFormat(": %.0f", app.world.waterAmount);
+    char const *stick_str= TextFormat(": %.0f", app.world.stick_amount);
+    char const *mushroom_str= TextFormat(": %.0f", app.world.mushroom_amount);
+    char const *borgir_str= TextFormat(": %.0f", app.world.burger_amount);
     
+    float const icon_scale = 0.035f;
     int const font_size = 40;
-    int const offset = 1.1f * font_size;
-    int const pos_x = 10; 
-    int pos_y = 10; 
+    int const offset = 1.2f * font_size;
+    int const pos_x = 15; 
+    int pos_y = 15; 
     
     // water icon
     DrawTextureEx(
-      bathtub1_tex, 
+      water_icon_tex, 
       Vector2 { (float)pos_x, (float)pos_y }, 
-      1.0f /*rotation*/, 
-      0.1f /*scale*/, 
+      1.0f /*rotation*/,
+      icon_scale, 
       WHITE
     );
-    DrawText(water_str, pos_x + 0.1f * bathtub1_tex.width, pos_y, font_size, RED);
+    DrawText(water_str, pos_x + icon_scale * water_icon_tex.width, pos_y, font_size, RED);
     pos_y += offset;
     
     // mushroom icon
     DrawTextureEx(
-      sopp_tex, 
+      shroom_icon_tex, 
       Vector2 { (float)pos_x, (float)pos_y }, 
       1.0f /*rotation*/, 
-      0.8f /*scale*/, 
+      icon_scale, 
       WHITE
     );
-    DrawText(mushroom_str, pos_x + 0.8f * sopp_tex.width, pos_y, font_size, RED);
+    DrawText(mushroom_str, pos_x + icon_scale * shroom_icon_tex.width, pos_y, font_size, RED);
     pos_y += offset;
     
     // stick icon
     DrawTextureEx(
-      stick_tex, 
+      stick_icon_tex, 
       Vector2 { (float)pos_x, (float)pos_y }, 
       1.0f /*rotation*/, 
-      0.2f /*scale*/, 
+      icon_scale, 
       WHITE
     );
-    DrawText(stick_str, pos_x + 0.2f * stick_tex.width, pos_y, font_size, RED);
+    DrawText(stick_str, pos_x + icon_scale * stick_icon_tex.width, pos_y, font_size, RED);
     pos_y += offset;
     
     // borgir icon
     DrawTextureEx(
-      donken_3_tex, 
+      borgir_icon_tex, 
       Vector2 { (float)pos_x, (float)pos_y }, 
       1.0f, /*rotation*/ 
-      0.05f, /*scale*/ 
+      icon_scale, 
       WHITE
     );
-    DrawText(borgir_str, pos_x + 0.05f * donken_3_tex.width, pos_y, font_size, RED);
+    DrawText(borgir_str, pos_x + icon_scale * borgir_icon_tex.width, pos_y, font_size, RED);
     pos_y += offset;
   }
   EndTextureMode();
