@@ -252,6 +252,61 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
   }
   render_entities(app, selected_turtles);
   EndMode2D();
+  { // === HUD/GUI ===
+    char const *water_str= TextFormat("%.0f", app.world.waterAmount);
+    char const *stick_str= TextFormat("%.0f", app.world.stick_amount);
+    char const *mushroom_str= TextFormat("%.0f", app.world.mushroom_amount);
+    char const *borgir_str= TextFormat("%.0f", app.world.burger_amount);
+    
+    int const font_size = 40;
+    int const offset = 1.1f * font_size;
+    int const pos_x = 10; 
+    int pos_y = 10; 
+    
+    // water icon
+    DrawTextureEx(
+      bathtub1_tex, 
+      Vector2 { (float)pos_x, (float)pos_y }, 
+      1.0f /*rotation*/, 
+      0.1f /*scale*/, 
+      WHITE
+    );
+    DrawText(water_str, pos_x + 0.1f * bathtub1_tex.width, pos_y, font_size, RED);
+    pos_y += offset;
+    
+    // mushroom icon
+    DrawTextureEx(
+      sopp_tex, 
+      Vector2 { (float)pos_x, (float)pos_y }, 
+      1.0f /*rotation*/, 
+      0.8f /*scale*/, 
+      WHITE
+    );
+    DrawText(mushroom_str, pos_x + 0.8f * sopp_tex.width, pos_y, font_size, RED);
+    pos_y += offset;
+    
+    // stick icon
+    DrawTextureEx(
+      stick_tex, 
+      Vector2 { (float)pos_x, (float)pos_y }, 
+      1.0f /*rotation*/, 
+      0.2f /*scale*/, 
+      WHITE
+    );
+    DrawText(stick_str, pos_x + 0.2f * stick_tex.width, pos_y, font_size, RED);
+    pos_y += offset;
+    
+    // borgir icon
+    DrawTextureEx(
+      donken_3_tex, 
+      Vector2 { (float)pos_x, (float)pos_y }, 
+      1.0f, /*rotation*/ 
+      0.05f, /*scale*/ 
+      WHITE
+    );
+    DrawText(borgir_str, pos_x + 0.05f * donken_3_tex.width, pos_y, font_size, RED);
+    pos_y += offset;
+  }
   EndTextureMode();
 }
 
@@ -308,26 +363,6 @@ void render_to_screen(App& app, Rectangle selection)
   Rectangle dst = { offset_x, offset_y, scaled_w, scaled_h };
   
   DrawTexturePro(app.render_target.texture, src, dst, {0, 0}, 0.0f, WHITE);
-  
-  { // TODO: temp
-    char const *scaling = 
-        app.settings.scaling == Scaling::STRETCHED ? 
-        "STRETCHED" : "BLACK BARS";
-    
-    char const *resolution_printout = 
-      TextFormat(
-        "Resolution %d x %d, %s\nFPS: %d\nWater: %.0f\nSticks: %.0f\nMushrooms: %.0f\nBurgers: %.0f", 
-        (int)res_w, 
-        (int)res_h, 
-        scaling, 
-        GetFPS(),
-        app.world.waterAmount,
-        app.world.stick_amount,
-        app.world.mushroom_amount,
-        app.world.burger_amount
-      );
-    DrawText(resolution_printout, 10, 10, 20, RED);
-  }
 
   float const line_thicc = 5.0f;
   if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) 
