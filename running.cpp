@@ -43,6 +43,9 @@ void process_turtle(Entity& ent, float const dt, App& app)
     return;
   }
   ent.moistness -= dt;
+  if (ent.hunger > 0.0f) {
+    ent.hunger -= dt;
+  }
 
   {
     switch (ent.state) {
@@ -111,7 +114,7 @@ void process_turtle(Entity& ent, float const dt, App& app)
       }
       case TurtleState::EATING:
       {
-        const float eat_speed = 200.0f;
+        const float eat_speed = 1.0f;
         const float max_hunger = 100.0f;
         if (app.world.burger_amount > eat_speed * dt && ent.hunger < max_hunger) {
           app.world.burger_amount -= eat_speed * dt;
@@ -331,6 +334,16 @@ void run_gameloop(App& app)
             ent.hunger = 100.0f;
           }
           break;
+        }
+        case EntityType::DONKEN:
+        {
+          float const cooking_speed = 1.0f;
+          float const mushroom_depletion_speed = 10.0f;
+          if (ent.built_percent >= 100.0f && app.world.mushroom_amount > mushroom_depletion_speed * dt)
+          {
+            app.world.burger_amount += cooking_speed * dt;
+            app.world.mushroom_amount -= mushroom_depletion_speed * dt;
+          }
         }
         default: 
         { 
