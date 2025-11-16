@@ -12,6 +12,7 @@ int main()
   unsigned int const initial_win_w = 1920u;
   unsigned int const initial_win_h = 1080u;
   InitWindow(initial_win_w, initial_win_h, "Title");
+  SetTargetFPS(60);
   
   App app = init_application();
   app.world = init_world();
