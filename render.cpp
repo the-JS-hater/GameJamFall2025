@@ -365,7 +365,8 @@ void render_bath(Entity const& ent, float water_amount) {
     bathtub3_tex : water_amount > 2000.0f ?
       bathtub2_tex : bathtub1_tex;
   float scale = 0.2 + ent.built_percent * (0.8 / 100);
-  DrawTextureEx(tex, { ent.x, ent.y }, 1.0f /*rotation*/, scale, WHITE);  
+  Color color = ColorLerp_(GRAY, WHITE, ent.built_percent * (1.0f / 100.0f));
+  DrawTextureEx(tex, { ent.x, ent.y }, 1.0f /*rotation*/, scale, color);  
 }
 
 void render_stick(Entity const& ent) {
