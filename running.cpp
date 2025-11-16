@@ -38,13 +38,24 @@ void find_next_state(World& world, Entity& ent) {
 
 void process_turtle(Entity& ent, float const dt, App& app) 
 {
-  if (ent.moistness < 0.0f) {
-    ent.state = TurtleState::DEAD;
-    return;
+  // Change the turtle stats like moistness and hunger
+  {
+    if (ent.moistness < 0.0f) {
+      ent.state = TurtleState::DEAD;
+      return;
+    }
+    ent.moistness -= dt;
+    if (ent.hunger > 0.0f) {
+      ent.hunger -= dt;
+    }
   }
-  ent.moistness -= dt;
-  if (ent.hunger > 0.0f) {
-    ent.hunger -= dt;
+
+  // Start ideling if turtle is far away from target
+  {
+    if (ent.state != TurtleState::PATHING && Vector2Distance(ent.get_center(), ent.target) > app.world.tileSize)
+    {
+      ent.state = TurtleState::IDLE;
+    }
   }
 
   {
@@ -68,10 +79,6 @@ void process_turtle(Entity& ent, float const dt, App& app)
       }
       case TurtleState::COLLECTING: 
       {
-        if (Vector2Distance(ent.get_center(), ent.target) > app.world.tileSize)
-        {
-          ent.state = TurtleState::IDLE;
-        }
         float const collection_speed = 100.0f;
         Vector2 pos = Vector2{ent.x, ent.y};
         if (ent.touching == BuildingType::STICK)
