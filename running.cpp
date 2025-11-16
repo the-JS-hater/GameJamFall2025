@@ -129,7 +129,7 @@ void process_turtle(Entity& ent, float const dt, App& app)
       }
       case TurtleState::EATING:
       {
-        const float eat_speed = 1.0f;
+        const float eat_speed = 10.0f;
         const float max_hunger = 100.0f;
         if (app.world.burger_amount > eat_speed * dt && ent.hunger < max_hunger) {
           app.world.burger_amount -= eat_speed * dt;
