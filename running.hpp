@@ -13,7 +13,10 @@ enum struct Actions {
 void run_gameloop(App&);
 void run_pausemenu(App&);
 void run_startmenu(App&);
+void run_gameover(App&);
 
+void set_initial_entities(World&);
+void setup_world(App&);
 void process_turtle(Entity&, float const, App&); 
 
 // NOTE:(raylib.h) Use GetKeyPressed() to allow redefining

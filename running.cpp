@@ -301,7 +301,8 @@ void run_gameloop(App& app)
       create_donken(app.world, x1, y1);
       app.world.current_action = ActionType::DEFAULT;
     }
-
+      
+    unsigned int alive_count = 0;
     for (Entity& ent : app.world.entities) 
     {
       // == SELECTION ==
@@ -332,6 +333,7 @@ void run_gameloop(App& app)
       switch (ent.type) {
         case EntityType::TURTLE: 
         {
+          alive_count += (unsigned int)(ent.state != TurtleState::DEAD);
           process_turtle(ent, dt, app);
           break;
         }
@@ -361,6 +363,10 @@ void run_gameloop(App& app)
           TraceLog(LOG_INFO, "Unknown entity type");
         }
       }
+    }
+    if (alive_count == 0) {
+      app.state = AppState::GAMEOVER;
+      return;
     }
 
     // === RENDER ===
@@ -401,6 +407,56 @@ void run_startmenu(App& app)
     render_start_menu(app.render_target);
     render_to_screen(app, {0,0,0,0});
   }
+}
+
+void run_gameover(App& app)
+{
+  while (app.state == AppState::GAMEOVER)
+  {
+    // === INPUT ===
+    
+    if (IsKeyPressed(KEY_ESCAPE)) {
+      app.state = AppState::EXIT;
+      return;
+    }
+    if (IsKeyPressed(KEY_R)) {
+      app.state = AppState::GAMELOOP;
+      setup_world(app);
+      
+      return;
+    }
+    
+    // === RENDERING ===
+    
+    //TODO: change render-call
+    render_start_menu(app.render_target);
+    render_to_screen(app, {0,0,0,0});
+  }
+}
+
+void set_initial_entities(World& world)
+{
+  int const test_entities_count = 5;
+  for (unsigned int id = 0; id < test_entities_count; ++id)
+  {
+    spawn_turtle(
+      world,
+      (float)GetRandomValue(0, world.w),
+      (float)GetRandomValue(0, world.h)
+    );
+    spawn_egg(
+      world,
+      (float)GetRandomValue(0, world.w),
+      (float)GetRandomValue(0, world.h)
+    );
+  }
+}
+
+void setup_world(App& app)
+{
+  app.world = init_world();
+  set_initial_entities(app.world);
+  create_sticks_and_mushrooms(app.world);
 }
 
 void setup_controls(KeyboardKey* input_map) 
