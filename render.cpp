@@ -38,6 +38,9 @@ Texture2D bathtub5_tex;
 Texture2D donken_1_tex;
 Texture2D donken_2_tex;
 Texture2D donken_3_tex;
+Texture2D bush_tex;
+Texture2D gameover_screen_tex;
+
 
 Texture2D scale(Texture2D tex, int width, int height) {
   Image im = LoadImageFromTexture(tex);
@@ -76,7 +79,8 @@ void init_resources(App const& app)
   donken_1_tex            = LoadTexture("resources/Donken_1.png");
   donken_2_tex            = LoadTexture("resources/Donken_2.png");
   donken_3_tex            = LoadTexture("resources/Donken_3.png");
-  
+  bush_tex                = LoadTexture("resources/Bush.png");
+
   Image grass_image               = LoadImageFromTexture(grass_tex);
   Image turtle_image              = LoadImageFromTexture(turtle_tex);
   Image turtle2_image             = LoadImageFromTexture(turtle2_tex);             
@@ -106,6 +110,7 @@ void init_resources(App const& app)
   Image donken_1_image            = LoadImageFromTexture(donken_1_tex);
   Image donken_2_image            = LoadImageFromTexture(donken_2_tex);
   Image donken_3_image            = LoadImageFromTexture(donken_3_tex);
+  Image bush_image                = LoadImageFromTexture(bush_tex);
   
   int size = app.world.tileSize;
   ImageResize(&grass_image, size, size);
@@ -126,9 +131,13 @@ void init_resources(App const& app)
   ImageResize(&kantarell_image, size, size);
   ImageResize(&sopp_image, size, size);
 
-  int small_size = 0.33 * size;
+  int small_size = (int)(0.33 * (float)size);
   ImageResize(&rock_image, small_size, small_size);
-
+  ImageResize(
+    &bush_image, 
+    (int)((float)small_size * 2.0f), 
+    (int)((float)small_size * 2.0f)
+  );
   int big_size = 2 * size;
   ImageResize(&bathtub1_image, big_size, big_size);
   ImageResize(&bathtub2_image, big_size, big_size);
@@ -139,8 +148,8 @@ void init_resources(App const& app)
   ImageResize(&donken_2_image, big_size, big_size);
   ImageResize(&donken_3_image, big_size, big_size);
   
-  float const turtle_width = app.world.tileSize;
-  float const turtle_height = 1.2f * turtle_width;
+  int const turtle_width = app.world.tileSize;
+  int const turtle_height = (int)(1.2f * (float)turtle_width);
   ImageResize(&turtle_image, turtle_width, turtle_height);
   ImageResize(&turtle2_image, turtle_width, turtle_height);
   ImageResize(&turtle3_image, turtle_width, turtle_height);
@@ -177,6 +186,10 @@ void init_resources(App const& app)
   donken_1_tex            = LoadTextureFromImage(donken_1_image);
   donken_2_tex            = LoadTextureFromImage(donken_2_image);
   donken_3_tex            = LoadTextureFromImage(donken_3_image);
+  bush_tex                = LoadTextureFromImage(bush_image);
+  
+  gameover_screen_tex = LoadTexture("resources/Gameover_Screen.png");
+  scale(gameover_screen_tex, 1920u, 1080u);
 }
 
 void render_scene(App& app, std::set<unsigned int> const& selected_turtles) 
@@ -190,7 +203,6 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
       Vector2 position = GetScreenToWorld2D(Vector2{(float)screenX, (float)screenY}, app.camera);
       int x = (int)(position.x / app.world.tileSize);
       int y = (int)(position.y / app.world.tileSize);
-      Color color = GREEN;
       auto tileImage = app.world.tileImages.find(std::make_pair(x, y));
       Texture2D* tex = &grass_tex; 
       if (tileImage != app.world.tileImages.end()) {
@@ -216,6 +228,8 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
         case TileImage::SAND:
           tex = &sand_tex;
           break;
+        default:
+          break;
         }
       }
       Vector2 vec_pos = { (float)x * app.world.tileSize, (float)y * app.world.tileSize };
@@ -224,6 +238,9 @@ void render_scene(App& app, std::set<unsigned int> const& selected_turtles)
       {
         SetRandomSeed(x + y * 1000);
         switch (GetRandomValue(0, 20)) {
+          case 1:
+            DrawTextureEx(bush_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
+            break;
           case 4:
             DrawTextureEx(rock_tex, vec_pos, 0.0f /*rotation*/, 1.0f /*scale*/, WHITE);
             break;
@@ -242,27 +259,15 @@ void render_start_menu(RenderTexture2D& render_target)
 {
   BeginTextureMode(render_target);
   ClearBackground(WHITE);
-
   DrawTextureEx(start_screen_tex, Vector2 {0.0f, 0.0f}, 0.0f, 1.0f, WHITE);
+  EndTextureMode();
+}
 
-  char const *start_text= "PRESS SPACE TO START";
-  Font GetFontDefault(void);
-  int const font_size = 50; 
-  int const spacing = 2;
-  Vector2 text_size = MeasureTextEx(
-    GetFontDefault(), 
-    start_text, 
-    font_size, 
-    spacing
-  );
-  // Draw centered text
-  DrawText(
-    start_text, 
-    render_target.texture.width / 2 - (int)(text_size.x / 2.0f), 
-    render_target.texture.height * 0.90 - (int)(text_size.y / 2.0f), 
-    font_size,
-    RED
-  );
+void render_gameover(RenderTexture2D& render_target)
+{
+  BeginTextureMode(render_target);
+  ClearBackground(WHITE);
+  DrawTextureEx(gameover_screen_tex, Vector2 {0.0f, 0.0f}, 0.0f, 1.0f, WHITE);
   EndTextureMode();
 }
   
@@ -449,7 +454,7 @@ void render_mushroom(Entity const& ent) {
       break;
     }
   }
-  DrawTexture(tex, ent.x, ent.y, WHITE);  
+  DrawTexture(tex, (int)ent.x, (int)ent.y, WHITE);  
 }
 
 void render_entities(App& app, std::set<unsigned int> const& selected_turtles) 
