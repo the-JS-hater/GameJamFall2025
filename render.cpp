@@ -18,6 +18,10 @@ Texture2D river_top_left_tex;
 Texture2D river_bottom_right_tex;
 Texture2D river_top_right_tex;
 Texture2D sand_tex;
+Texture2D grass_sand_1_tex;
+Texture2D grass_sand_2_tex;
+Texture2D grass_sand_3_tex;
+Texture2D grass_sand_4_tex;
 Texture2D egg_tex;
 Texture2D start_screen_tex;
 Texture2D flugsvamp_tex;
@@ -29,7 +33,9 @@ Texture2D dead_turtle_tex;
 Texture2D bathtub1_tex; 
 Texture2D bathtub2_tex;
 Texture2D bathtub3_tex;
-Texture2D donken_tex;
+Texture2D donken_1_tex;
+Texture2D donken_2_tex;
+Texture2D donken_3_tex;
 
 
 void init_resources(App const& app) 
@@ -45,6 +51,10 @@ void init_resources(App const& app)
   river_bottom_right_tex  = LoadTexture("resources/River_Bottom_Right.png");
   river_top_right_tex     = LoadTexture("resources/River_Top_Right.png");
   sand_tex                = LoadTexture("resources/sand.png");
+  grass_sand_1_tex        = LoadTexture("resources/grass_sand_1.png");
+  grass_sand_2_tex        = LoadTexture("resources/grass_sand_2.png");
+  grass_sand_3_tex        = LoadTexture("resources/grass_sand_3.png");
+  grass_sand_4_tex        = LoadTexture("resources/grass_sand_4.png");
   egg_tex                 = LoadTexture("resources/Egg.png");
   start_screen_tex        = LoadTexture("resources/Start_Screen.png");
   flugsvamp_tex           = LoadTexture("resources/Flugsvamp.png");
@@ -56,7 +66,9 @@ void init_resources(App const& app)
   bathtub1_tex            = LoadTexture("resources/Bath_1.png");
   bathtub2_tex            = LoadTexture("resources/Bath_2.png");
   bathtub3_tex            = LoadTexture("resources/Bath_3.png");
-  donken_tex              = LoadTexture("resources/Donken.png");
+  donken_1_tex            = LoadTexture("resources/Donken_1.png");
+  donken_2_tex            = LoadTexture("resources/Donken_2.png");
+  donken_3_tex            = LoadTexture("resources/Donken_3.png");
   
   Image grass_image               = LoadImageFromTexture(grass_tex);
   Image turtle_image              = LoadImageFromTexture(turtle_tex);
@@ -69,6 +81,10 @@ void init_resources(App const& app)
   Image river_bottom_right_image  = LoadImageFromTexture(river_bottom_right_tex);
   Image river_top_right_image     = LoadImageFromTexture(river_top_right_tex);
   Image sand_image                = LoadImageFromTexture(sand_tex);
+  Image grass_sand_1_image        = LoadImageFromTexture(grass_sand_1_tex);
+  Image grass_sand_2_image        = LoadImageFromTexture(grass_sand_2_tex);
+  Image grass_sand_3_image        = LoadImageFromTexture(grass_sand_3_tex);
+  Image grass_sand_4_image        = LoadImageFromTexture(grass_sand_4_tex);
   Image egg_image                 = LoadImageFromTexture(egg_tex);
   Image start_screen_image        = LoadImageFromTexture(start_screen_tex);
   Image flugsvamp_image           = LoadImageFromTexture(flugsvamp_tex);
@@ -80,7 +96,9 @@ void init_resources(App const& app)
   Image bathtub1_image            = LoadImageFromTexture(bathtub1_tex);
   Image bathtub2_image            = LoadImageFromTexture(bathtub2_tex);
   Image bathtub3_image            = LoadImageFromTexture(bathtub3_tex);
-  Image donken_image              = LoadImageFromTexture(donken_tex);
+  Image donken_1_image            = LoadImageFromTexture(donken_1_tex);
+  Image donken_2_image            = LoadImageFromTexture(donken_2_tex);
+  Image donken_3_image            = LoadImageFromTexture(donken_3_tex);
   
   int size = app.world.tileSize;
   ImageResize(&grass_image, size, size);
@@ -91,6 +109,10 @@ void init_resources(App const& app)
   ImageResize(&river_bottom_right_image, size, size);
   ImageResize(&river_top_right_image, size, size);
   ImageResize(&sand_image, size, size);
+  ImageResize(&grass_sand_1_image, size, size);
+  ImageResize(&grass_sand_2_image, size, size);
+  ImageResize(&grass_sand_3_image, size, size);
+  ImageResize(&grass_sand_4_image, size, size);
   ImageResize(&egg_image, size, size);
   ImageResize(&stick_image, size, size);
   ImageResize(&flugsvamp_image, size, size);
@@ -104,7 +126,9 @@ void init_resources(App const& app)
   ImageResize(&bathtub1_image, big_size, big_size);
   ImageResize(&bathtub2_image, big_size, big_size);
   ImageResize(&bathtub3_image, big_size, big_size);
-  ImageResize(&donken_image, big_size, big_size);
+  ImageResize(&donken_1_image, big_size, big_size);
+  ImageResize(&donken_2_image, big_size, big_size);
+  ImageResize(&donken_3_image, big_size, big_size);
   
   float const turtle_width = app.world.tileSize;
   float const turtle_height = 1.2f * turtle_width;
@@ -126,6 +150,10 @@ void init_resources(App const& app)
   river_bottom_right_tex  = LoadTextureFromImage(river_bottom_right_image);
   river_top_right_tex     = LoadTextureFromImage(river_top_right_image);
   sand_tex                = LoadTextureFromImage(sand_image);
+  grass_sand_1_tex        = LoadTextureFromImage(grass_sand_1_image);
+  grass_sand_2_tex        = LoadTextureFromImage(grass_sand_2_image);
+  grass_sand_3_tex        = LoadTextureFromImage(grass_sand_3_image);
+  grass_sand_4_tex        = LoadTextureFromImage(grass_sand_4_image);
   egg_tex                 = LoadTextureFromImage(egg_image);
   start_screen_tex        = LoadTextureFromImage(start_screen_image);
   flugsvamp_tex           = LoadTextureFromImage(flugsvamp_image);
@@ -137,7 +165,9 @@ void init_resources(App const& app)
   bathtub1_tex            = LoadTextureFromImage(bathtub1_image);
   bathtub2_tex            = LoadTextureFromImage(bathtub2_image);
   bathtub3_tex            = LoadTextureFromImage(bathtub3_image);
-  donken_tex              = LoadTextureFromImage(donken_image);
+  donken_1_tex            = LoadTextureFromImage(donken_1_image);
+  donken_2_tex            = LoadTextureFromImage(donken_2_image);
+  donken_3_tex            = LoadTextureFromImage(donken_3_image);
 }
 
 void render_scene(App& app, std::set<unsigned int> const& selected_turtles) 
@@ -370,7 +400,10 @@ void render_stick(Entity const& ent) {
 void render_donken(Entity const& ent) {
   float scale = 0.2 + ent.built_percent * (0.8 / 100);
   Color color = ColorLerp_(GRAY, WHITE, ent.built_percent * (1.0f / 100.0f));
-  DrawTextureEx(donken_tex, { ent.x, ent.y }, 0.0f /*rotation*/, scale, color);  
+  Texture2D tex = ent.built_percent < 50.0f ?
+                    donken_1_tex : ent.built_percent < 100.0f ?
+                      donken_2_tex : donken_3_tex;
+  DrawTextureEx(tex, { ent.x, ent.y }, 0.0f /*rotation*/, scale, color);  
 }
 
 void render_mushroom(Entity const& ent) {
