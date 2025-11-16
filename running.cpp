@@ -50,13 +50,14 @@ void process_turtle(Entity& ent, float const dt, App& app)
     ) 
     {
       if (ent.moistness < 0.0f && ent.state != TurtleState::DEAD) {
-      ent.state = TurtleState::DEAD;
-      return;
+        ent.state = TurtleState::DEAD;
+        return;
+      }
+      float const moistness_depletion_rate = 0.3f;
+      float const hunger_depletion_rate = 0.3f;
+      ent.moistness -= dt * moistness_depletion_rate;
+      ent.hunger -= dt * hunger_depletion_rate;
     }
-    float const moistness_depletion_rate = 0.3f;
-    float const hunger_depletion_rate = 0.3f;
-    ent.moistness -= dt * moistness_depletion_rate;
-    ent.hunger -= dt * hunger_depletion_rate;
   }
 
   // Start ideling if turtle is far away from target
