@@ -20,6 +20,7 @@ enum struct AppState {
   GAMELOOP,
   EXIT,
   START,
+  GAMEOVER
 };
 
 struct App {
