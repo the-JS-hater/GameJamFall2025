@@ -33,10 +33,17 @@ Texture2D dead_turtle_tex;
 Texture2D bathtub1_tex; 
 Texture2D bathtub2_tex;
 Texture2D bathtub3_tex;
+Texture2D bathtub4_tex;
+Texture2D bathtub5_tex;
 Texture2D donken_1_tex;
 Texture2D donken_2_tex;
 Texture2D donken_3_tex;
 
+Texture2D scale(Texture2D tex, int width, int height) {
+  Image im = LoadImageFromTexture(tex);
+  ImageResize(&im, width, height);
+  return LoadTextureFromImage(im);
+}
 
 void init_resources(App const& app) 
 {
@@ -126,6 +133,8 @@ void init_resources(App const& app)
   ImageResize(&bathtub1_image, big_size, big_size);
   ImageResize(&bathtub2_image, big_size, big_size);
   ImageResize(&bathtub3_image, big_size, big_size);
+  bathtub4_tex = scale(LoadTexture("resources/Bath_4.png"), big_size, big_size);
+  bathtub5_tex = scale(LoadTexture("resources/Bath_5.png"), big_size, big_size);
   ImageResize(&donken_1_image, big_size, big_size);
   ImageResize(&donken_2_image, big_size, big_size);
   ImageResize(&donken_3_image, big_size, big_size);
@@ -385,9 +394,18 @@ void render_egg(Entity const& ent) {
 }
 
 void render_bath(Entity const& ent, float water_amount) {
-  Texture2D tex = water_amount > 6000.0f ?
-    bathtub3_tex : water_amount > 2000.0f ?
-      bathtub2_tex : bathtub1_tex;
+  Texture2D tex;
+  if (ent.built_percent < 50.0f) {
+    tex = bathtub1_tex;
+  }
+  else if (ent.built_percent < 100.0f) {
+    tex = bathtub2_tex;
+  }
+  else {
+    tex = water_amount > 6000.0f ?
+      bathtub5_tex : water_amount > 2000.0f ?
+        bathtub4_tex : bathtub3_tex;
+  }
   float scale = 0.2 + ent.built_percent * (0.8 / 100);
   Color color = ColorLerp_(GRAY, WHITE, ent.built_percent * (1.0f / 100.0f));
   DrawTextureEx(tex, { ent.x, ent.y }, 1.0f /*rotation*/, scale, color);  
