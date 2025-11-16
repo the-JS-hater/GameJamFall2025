@@ -493,8 +493,8 @@ void render_bath(Entity const& ent, float water_amount) {
     tex = bathtub2_tex;
   }
   else {
-    tex = water_amount > 6000.0f ?
-      bathtub5_tex : water_amount > 2000.0f ?
+    tex = water_amount > 100.0f ?
+      bathtub5_tex : water_amount > 10.0f ?
         bathtub4_tex : bathtub3_tex;
   }
   Color color = ColorLerp_(GRAY, WHITE, ent.built_percent * (1.0f / 100.0f));
