@@ -429,6 +429,17 @@ void render_turtle(Entity const& ent) {
       DrawTextureEx(default_turtle_tex, { ent.x, ent.y }, 1.0f /*rotation*/, 1.0f /*scale*/, WHITE);
       break;
   }
+  if (ent.hunger < 50) 
+  {
+    DrawTextEx(
+      GetFontDefault(), 
+      "!!!", 
+      { ent.x + (0.50f * ent.w), ent.y - 1.1f * text_offset}, 
+      font_size * 3.0f, 
+      spacing, 
+      RED 
+    );
+  }
 }
 
 Color ColorLerp_(Color col1, Color col2, float t) {
