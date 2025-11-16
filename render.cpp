@@ -46,6 +46,7 @@ Texture2D water_icon_tex;
 Texture2D stick_icon_tex;
 Texture2D borgir_icon_tex;
 Texture2D shroom_icon_tex;
+Texture2D turtorial_screen_tex;
 
 Texture2D scale(Texture2D tex, int width, int height) {
   Image im = LoadImageFromTexture(tex);
@@ -192,6 +193,8 @@ void init_resources(App const& app)
   bush_tex                = LoadTextureFromImage(bush_image);
   
   gameover_screen_tex = LoadTexture("resources/Gameover_Screen.png");
+  scale(gameover_screen_tex, 1920u, 1080u);
+  turtorial_screen_tex = LoadTexture("resources/Turtorial.png");
   scale(gameover_screen_tex, 1920u, 1080u);
 
   int const icon_scale = 16u;
@@ -352,6 +355,14 @@ void render_gameover(RenderTexture2D& render_target)
   BeginTextureMode(render_target);
   ClearBackground(WHITE);
   DrawTextureEx(gameover_screen_tex, Vector2 {0.0f, 0.0f}, 0.0f, 1.0f, WHITE);
+  EndTextureMode();
+}
+
+void render_help(RenderTexture2D& render_target)
+{
+  BeginTextureMode(render_target);
+  ClearBackground(WHITE);
+  DrawTextureEx(turtorial_screen_tex, Vector2 {0.0f, 0.0f}, 0.0f, 1.0f, WHITE);
   EndTextureMode();
 }
   

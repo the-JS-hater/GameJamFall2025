@@ -14,6 +14,7 @@ void run_gameloop(App&);
 void run_pausemenu(App&);
 void run_startmenu(App&);
 void run_gameover(App&);
+void run_tutorial(App&);
 
 void set_initial_entities(World&);
 void setup_world(App&);
