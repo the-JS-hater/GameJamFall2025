@@ -23,12 +23,12 @@ void find_next_state(World& world, Entity& ent) {
   {
     ent.state = TurtleState::EATING;
   }
-  else if (world.tiles[world_to_tile_pos(world, ent.x, ent.y)] == TileType::SAND && ent.hunger > 50.0f)
+  else if (world.tiles[world_to_tile_pos(world, ent.get_center().x, ent.get_center().y)] == TileType::SAND && ent.hunger > 50.0f)
   {
     ent.hunger -= 20.0f;
     spawn_egg(world, ent.x, ent.y, ent.moistness, ent.hunger);
   }
-  else if (world.tiles[world_to_tile_pos(world, ent.x, ent.y)] == TileType::RIVER
+  else if (world.tiles[world_to_tile_pos(world, ent.get_center().x, ent.get_center().y)] == TileType::RIVER
             || ent.touching == BuildingType::STICK
             || ent.touching == BuildingType::MUSHROOM)
   {
@@ -92,7 +92,7 @@ void process_turtle(Entity& ent, float const dt, App& app)
         {
           app.world.mushroom_amount += dt * collection_speed;
         }
-        else if (app.world.tiles[world_to_tile_pos(app.world, ent.x, ent.y)] == TileType::RIVER)
+        else if (app.world.tiles[world_to_tile_pos(app.world, ent.get_center().x, ent.get_center().y)] == TileType::RIVER)
         {
           app.world.waterAmount += dt * collection_speed;
         }
