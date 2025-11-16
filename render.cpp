@@ -471,9 +471,8 @@ void render_bath(Entity const& ent, float water_amount) {
       bathtub5_tex : water_amount > 2000.0f ?
         bathtub4_tex : bathtub3_tex;
   }
-  float scale = 0.2 + ent.built_percent * (0.8 / 100);
   Color color = ColorLerp_(GRAY, WHITE, ent.built_percent * (1.0f / 100.0f));
-  DrawTextureEx(tex, { ent.x, ent.y }, 1.0f /*rotation*/, scale, color);  
+  DrawTexture(tex, ent.x, ent.y, color);  
 }
 
 void render_stick(Entity const& ent) {
@@ -481,12 +480,11 @@ void render_stick(Entity const& ent) {
 }
 
 void render_donken(Entity const& ent) {
-  float scale = 0.2 + ent.built_percent * (0.8 / 100);
   Color color = ColorLerp_(GRAY, WHITE, ent.built_percent * (1.0f / 100.0f));
   Texture2D tex = ent.built_percent < 50.0f ?
                     donken_1_tex : ent.built_percent < 100.0f ?
                       donken_2_tex : donken_3_tex;
-  DrawTextureEx(tex, { ent.x, ent.y }, 0.0f /*rotation*/, scale, color);  
+  DrawTexture(tex, ent.x, ent.y, color);  
 }
 
 void render_mushroom(Entity const& ent) {
